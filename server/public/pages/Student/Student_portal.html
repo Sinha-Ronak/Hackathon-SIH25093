@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        .page-content {
+            display: none;
+        }
+        .page-content.active {
+            display: block;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 font-sans text-gray-800">
+
+    <!-- Sidebar -->
+    <div class="fixed inset-y-0 left-0 bg-white w-64 p-6 overflow-y-auto z-10 hidden md:block">
+        <h1 class="text-3xl font-bold text-gray-900 mb-8">Student Portal</h1>
+        <nav>
+            <ul class="space-y-4">
+                <li>
+                    <a href="#" data-page="profile" class="nav-link flex items-center p-3 text-gray-700 hover:bg-indigo-100 hover:text-indigo-600 rounded-lg transition-colors duration-200">
+                        <i class="fas fa-user-circle w-5 h-5 mr-3"></i>
+                        <span>Profile</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" data-page="attendance" class="nav-link flex items-center p-3 text-gray-700 hover:bg-indigo-100 hover:text-indigo-600 rounded-lg transition-colors duration-200">
+                        <i class="fas fa-calendar-check w-5 h-5 mr-3"></i>
+                        <span>Attendance</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" data-page="download" class="nav-link flex items-center p-3 text-gray-700 hover:bg-indigo-100 hover:text-indigo-600 rounded-lg transition-colors duration-200">
+                        <i class="fas fa-download w-5 h-5 mr-3"></i>
+                        <span>Download Assets</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" data-page="result" class="nav-link flex items-center p-3 text-gray-700 hover:bg-indigo-100 hover:text-indigo-600 rounded-lg transition-colors duration-200">
+                        <i class="fas fa-poll w-5 h-5 mr-3"></i>
+                        <span>Result</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" data-page="docs-upload" class="nav-link flex items-center p-3 text-gray-700 hover:bg-indigo-100 hover:text-indigo-600 rounded-lg transition-colors duration-200">
+                        <i class="fas fa-file-upload w-5 h-5 mr-3"></i>
+                        <span>Docs Upload</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" data-page="view-class" class="nav-link flex items-center p-3 text-gray-700 hover:bg-indigo-100 hover:text-indigo-600 rounded-lg transition-colors duration-200">
+                        <i class="fas fa-chalkboard-teacher w-5 h-5 mr-3"></i>
+                        <span>View Class</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" data-page="view-assignments" class="nav-link flex items-center p-3 text-gray-700 hover:bg-indigo-100 hover:text-indigo-600 rounded-lg transition-colors duration-200">
+                        <i class="fas fa-tasks w-5 h-5 mr-3"></i>
+                        <span>View Assignments</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" data-page="assignment-upload" class="nav-link flex items-center p-3 text-gray-700 hover:bg-indigo-100 hover:text-indigo-600 rounded-lg transition-colors duration-200">
+                        <i class="fas fa-upload w-5 h-5 mr-3"></i>
+                        <span>Assignment Upload</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+
+    <!-- Main Content -->
+    <div class="md:ml-64 p-6">
+
+        <!-- Mobile Header (hidden on desktop) -->
+        <div class="bg-white p-4 flex justify-between items-center shadow md:hidden mb-6 rounded-lg">
+            <h1 class="text-xl font-bold text-gray-900">Student Portal</h1>
+            <button id="mobile-menu-button" class="text-gray-600 focus:outline-none">
+                <i class="fas fa-bars text-xl"></i>
+            </button>
+        </div>
+
+        <!-- Mobile Sidebar (hidden by default) -->
+        <div id="mobile-sidebar" class="fixed inset-y-0 left-0 bg-white w-64 p-6 overflow-y-auto z-20 transform -translate-x-full transition-transform duration-300 ease-in-out md:hidden">
+            <div class="flex justify-end mb-4">
+                <button id="close-mobile-menu" class="text-gray-600 focus:outline-none">
+                    <i class="fas fa-times text-2xl"></i>
+                </button>
+            </div>
+            <nav>
+                <ul class="space-y-4">
+                    <li>
+                        <a href="#" data-page="profile" class="nav-link flex items-center p-3 text-gray-700 hover:bg-indigo-100 hover:text-indigo-600 rounded-lg transition-colors duration-200">
+                            <i class="fas fa-user-circle w-5 h-5 mr-3"></i>
+                            <span>Profile</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" data-page="attendance" class="nav-link flex items-center p-3 text-gray-700 hover:bg-indigo-100 hover:text-indigo-600 rounded-lg transition-colors duration-200">
+                            <i class="fas fa-calendar-check w-5 h-5 mr-3"></i>
+                            <span>Attendance</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" data-page="download" class="nav-link flex items-center p-3 text-gray-700 hover:bg-indigo-100 hover:text-indigo-600 rounded-lg transition-colors duration-200">
+                            <i class="fas fa-download w-5 h-5 mr-3"></i>
+                            <span>Download Assets</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" data-page="result" class="nav-link flex items-center p-3 text-gray-700 hover:bg-indigo-100 hover:text-indigo-600 rounded-lg transition-colors duration-200">
+                            <i class="fas fa-poll w-5 h-5 mr-3"></i>
+                            <span>Result</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" data-page="docs-upload" class="nav-link flex items-center p-3 text-gray-700 hover:bg-indigo-100 hover:text-indigo-600 rounded-lg transition-colors duration-200">
+                            <i class="fas fa-file-upload w-5 h-5 mr-3"></i>
+                            <span>Docs Upload</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" data-page="view-class" class="nav-link flex items-center p-3 text-gray-700 hover:bg-indigo-100 hover:text-indigo-600 rounded-lg transition-colors duration-200">
+                            <i class="fas fa-chalkboard-teacher w-5 h-5 mr-3"></i>
+                            <span>View Class</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" data-page="view-assignments" class="nav-link flex items-center p-3 text-gray-700 hover:bg-indigo-100 hover:text-indigo-600 rounded-lg transition-colors duration-200">
+                            <i class="fas fa-tasks w-5 h-5 mr-3"></i>
+                            <span>View Assignments</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" data-page="assignment-upload" class="nav-link flex items-center p-3 text-gray-700 hover:bg-indigo-100 hover:text-indigo-600 rounded-lg transition-colors duration-200">
+                            <i class="fas fa-upload w-5 h-5 mr-3"></i>
+                            <span>Assignment Upload</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+
+
+        <!-- Profile Page Content -->
+        <div id="profile" class="page-content active bg-white p-8 rounded-lg shadow-lg">
+            <h2 class="text-2xl font-semibold text-gray-900 mb-6 border-b-2 pb-2">My Profile</h2>
+            <div class="flex flex-col md:flex-row items-center md:items-start space-y-6 md:space-y-0 md:space-x-8">
+                <div class="flex-shrink-0">
+                    <img class="h-32 w-32 rounded-full border-4 border-indigo-400 object-cover" src="https://placehold.co/128x128/6B46C1/ffffff?text=STUDENT" alt="Student Profile Picture">
+                </div>
+                <div class="flex-grow w-full">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-y-4 gap-x-8">
+                        <div>
+                            <p class="text-sm text-gray-500 font-medium">Name</p>
+                            <p class="text-lg font-bold text-gray-900">Jane Doe</p>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-500 font-medium">Student ID</p>
+                            <p class="text-lg font-semibold text-gray-900">S12345678</p>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-500 font-medium">Email</p>
+                            <p class="text-lg font-semibold text-gray-900">jane.doe@example.edu</p>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-500 font-medium">Phone</p>
+                            <p class="text-lg font-semibold text-gray-900">+1 (555) 123-4567</p>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-500 font-medium">Program</p>
+                            <p class="text-lg font-semibold text-gray-900">Computer Science</p>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-500 font-medium">Year</p>
+                            <p class="text-lg font-semibold text-gray-900">2nd Year</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-8 border-t-2 pt-6">
+                <h3 class="text-xl font-semibold text-gray-900 mb-4">Contact Information</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-y-4 gap-x-8">
+                    <div>
+                        <p class="text-sm text-gray-500 font-medium">Address</p>
+                        <p class="text-lg font-semibold text-gray-900">123 Main Street, Anytown, USA 12345</p>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-500 font-medium">Emergency Contact</p>
+                        <p class="text-lg font-semibold text-gray-900">John Doe (+1 555-987-6543)</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Attendance Page Content -->
+        <div id="attendance" class="page-content">
+            <div class="bg-white p-8 rounded-lg shadow-lg">
+                <h2 class="text-2xl font-semibold text-gray-900 mb-6 border-b-2 pb-2">Attendance Record</h2>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Subject</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Total Classes</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Classes Attended</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Percentage</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-200">
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap">Data Structures</td>
+                                <td class="px-6 py-4 whitespace-nowrap">50</td>
+                                <td class="px-6 py-4 whitespace-nowrap">45</td>
+                                <td class="px-6 py-4 whitespace-nowrap font-bold text-green-600">90%</td>
+                            </tr>
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap">Operating Systems</td>
+                                <td class="px-6 py-4 whitespace-nowrap">45</td>
+                                <td class="px-6 py-4 whitespace-nowrap">38</td>
+                                <td class="px-6 py-4 whitespace-nowrap font-bold text-yellow-600">84%</td>
+                            </tr>
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap">Database Management</td>
+                                <td class="px-6 py-4 whitespace-nowrap">40</td>
+                                <td class="px-6 py-4 whitespace-nowrap">30</td>
+                                <td class="px-6 py-4 whitespace-nowrap font-bold text-red-600">75%</td>
+                            </tr>
+                            <!-- More rows can be added here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Download Assets Page Content -->
+        <div id="download" class="page-content">
+            <div class="bg-white p-8 rounded-lg shadow-lg">
+                <h2 class="text-2xl font-semibold text-gray-900 mb-6 border-b-2 pb-2">Download Assets</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div class="bg-gray-50 p-6 rounded-lg shadow-md flex items-center justify-between">
+                        <div class="flex items-center">
+                            <i class="fas fa-file-alt text-2xl text-indigo-500 mr-4"></i>
+                            <div>
+                                <h3 class="font-semibold">Question Papers</h3>
+                                <p class="text-sm text-gray-600">All Semesters</p>
+                            </div>
+                        </div>
+                        <button class="bg-indigo-500 hover:bg-indigo-600 text-white font-bold py-2 px-4 rounded-lg transition-colors duration-200">
+                            <i class="fas fa-download mr-2"></i> Download
+                        </button>
+                    </div>
+                    <div class="bg-gray-50 p-6 rounded-lg shadow-md flex items-center justify-between">
+                        <div class="flex items-center">
+                            <i class="fas fa-clock text-2xl text-indigo-500 mr-4"></i>
+                            <div>
+                                <h3 class="font-semibold">Time Table</h3>
+                                <p class="text-sm text-gray-600">Current Semester</p>
+                            </div>
+                        </div>
+                        <button class="bg-indigo-500 hover:bg-indigo-600 text-white font-bold py-2 px-4 rounded-lg transition-colors duration-200">
+                            <i class="fas fa-download mr-2"></i> Download
+                        </button>
+                    </div>
+                    <div class="bg-gray-50 p-6 rounded-lg shadow-md flex items-center justify-between">
+                        <div class="flex items-center">
+                            <i class="fas fa-book-open text-2xl text-indigo-500 mr-4"></i>
+                            <div>
+                                <h3 class="font-semibold">Syllabus Scheme</h3>
+                                <p class="text-sm text-gray-600">All Programs</p>
+                            </div>
+                        </div>
+                        <button class="bg-indigo-500 hover:bg-indigo-600 text-white font-bold py-2 px-4 rounded-lg transition-colors duration-200">
+                            <i class="fas fa-download mr-2"></i> Download
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Result Page Content -->
+        <div id="result" class="page-content">
+            <div class="bg-white p-8 rounded-lg shadow-lg">
+                <h2 class="text-2xl font-semibold text-gray-900 mb-6 border-b-2 pb-2">My Result</h2>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Subject</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Credits</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Marks</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Grade</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-200">
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap">Data Structures</td>
+                                <td class="px-6 py-4 whitespace-nowrap">4</td>
+                                <td class="px-6 py-4 whitespace-nowrap">92</td>
+                                <td class="px-6 py-4 whitespace-nowrap font-bold text-green-600">A+</td>
+                            </tr>
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap">Operating Systems</td>
+                                <td class="px-6 py-4 whitespace-nowrap">4</td>
+                                <td class="px-6 py-4 whitespace-nowrap">88</td>
+                                <td class="px-6 py-4 whitespace-nowrap font-bold text-green-600">A</td>
+                            </tr>
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap">Database Management</td>
+                                <td class="px-6 py-4 whitespace-nowrap">3</td>
+                                <td class="px-6 py-4 whitespace-nowrap">75</td>
+                                <td class="px-6 py-4 whitespace-nowrap font-bold text-yellow-600">B</td>
+                            </tr>
+                            <!-- More rows can be added here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Docs Upload Page Content -->
+        <div id="docs-upload" class="page-content">
+            <div class="bg-white p-8 rounded-lg shadow-lg">
+                <h2 class="text-2xl font-semibold text-gray-900 mb-6 border-b-2 pb-2">Document Upload</h2>
+                <div class="flex flex-col space-y-6">
+                    <div class="flex items-center justify-between p-4 border rounded-lg shadow-sm">
+                        <div class="flex items-center">
+                            <i class="fas fa-file-upload text-xl text-indigo-500 mr-4"></i>
+                            <span class="text-lg font-medium">College Admission Form</span>
+                        </div>
+                        <input type="file" class="hidden" id="admissionForm">
+                        <label for="admissionForm" class="cursor-pointer bg-indigo-500 hover:bg-indigo-600 text-white font-bold py-2 px-4 rounded-lg transition-colors duration-200">
+                            Choose File
+                        </label>
+                    </div>
+                    <div class="flex items-center justify-between p-4 border rounded-lg shadow-sm">
+                        <div class="flex items-center">
+                            <i class="fas fa-file-upload text-xl text-indigo-500 mr-4"></i>
+                            <span class="text-lg font-medium">High School Transcript</span>
+                        </div>
+                        <input type="file" class="hidden" id="transcript">
+                        <label for="transcript" class="cursor-pointer bg-indigo-500 hover:bg-indigo-600 text-white font-bold py-2 px-4 rounded-lg transition-colors duration-200">
+                            Choose File
+                        </label>
+                    </div>
+                    <div class="flex items-center justify-between p-4 border rounded-lg shadow-sm">
+                        <div class="flex items-center">
+                            <i class="fas fa-file-upload text-xl text-indigo-500 mr-4"></i>
+                            <span class="text-lg font-medium">Photo ID Proof</span>
+                        </div>
+                        <input type="file" class="hidden" id="idProof">
+                        <label for="idProof" class="cursor-pointer bg-indigo-500 hover:bg-indigo-600 text-white font-bold py-2 px-4 rounded-lg transition-colors duration-200">
+                            Choose File
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- View Class Page Content -->
+        <div id="view-class" class="page-content">
+            <div class="bg-white p-8 rounded-lg shadow-lg">
+                <h2 class="text-2xl font-semibold text-gray-900 mb-6 border-b-2 pb-2">Faculty Details</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="bg-gray-50 p-6 rounded-lg shadow-md flex items-center">
+                        <img class="h-16 w-16 rounded-full border-2 border-indigo-400 object-cover mr-4" src="https://placehold.co/64x64/6B46C1/ffffff?text=FACULTY" alt="Faculty Profile Picture">
+                        <div>
+                            <h3 class="text-xl font-bold">Dr. Amanda Clark</h3>
+                            <p class="text-gray-600">Computer Science Department</p>
+                            <p class="text-gray-600 mt-1"><i class="fas fa-envelope mr-2"></i>amanda.clark@example.edu</p>
+                        </div>
+                    </div>
+                    <div class="bg-gray-50 p-6 rounded-lg shadow-md flex items-center">
+                        <img class="h-16 w-16 rounded-full border-2 border-indigo-400 object-cover mr-4" src="https://placehold.co/64x64/6B46C1/ffffff?text=FACULTY" alt="Faculty Profile Picture">
+                        <div>
+                            <h3 class="text-xl font-bold">Prof. David Lee</h3>
+                            <p class="text-gray-600">Mathematics Department</p>
+                            <p class="text-gray-600 mt-1"><i class="fas fa-envelope mr-2"></i>david.lee@example.edu</p>
+                        </div>
+                    </div>
+                    <div class="bg-gray-50 p-6 rounded-lg shadow-md flex items-center">
+                        <img class="h-16 w-16 rounded-full border-2 border-indigo-400 object-cover mr-4" src="https://placehold.co/64x64/6B46C1/ffffff?text=FACULTY" alt="Faculty Profile Picture">
+                        <div>
+                            <h3 class="text-xl font-bold">Dr. Maria Garcia</h3>
+                            <p class="text-gray-600">Physics Department</p>
+                            <p class="text-gray-600 mt-1"><i class="fas fa-envelope mr-2"></i>maria.garcia@example.edu</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- View Assignments Page Content -->
+        <div id="view-assignments" class="page-content">
+            <div class="bg-white p-8 rounded-lg shadow-lg">
+                <h2 class="text-2xl font-semibold text-gray-900 mb-6 border-b-2 pb-2">View Assignments</h2>
+                <div class="space-y-6">
+                    <div class="bg-gray-50 p-6 rounded-lg shadow-md">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-xl font-bold">Data Structures: Linked Lists</h3>
+                            <span class="text-sm text-gray-500">Due: October 25, 2025</span>
+                        </div>
+                        <div class="flex items-center space-x-4 mb-4">
+                            <button class="bg-indigo-500 hover:bg-indigo-600 text-white font-bold py-2 px-4 rounded-lg transition-colors duration-200">
+                                <i class="fas fa-file-alt mr-2"></i> Download Notes
+                            </button>
+                            <button class="bg-indigo-500 hover:bg-indigo-600 text-white font-bold py-2 px-4 rounded-lg transition-colors duration-200">
+                                <i class="fas fa-video mr-2"></i> Download Video
+                            </button>
+                        </div>
+                        <p class="text-gray-700">Task: Implement a doubly linked list in C++ and provide a complexity analysis of key operations.</p>
+                    </div>
+                    <div class="bg-gray-50 p-6 rounded-lg shadow-md">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-xl font-bold">Operating Systems: CPU Scheduling</h3>
+                            <span class="text-sm text-gray-500">Due: November 10, 2025</span>
+                        </div>
+                        <div class="flex items-center space-x-4 mb-4">
+                            <button class="bg-indigo-500 hover:bg-indigo-600 text-white font-bold py-2 px-4 rounded-lg transition-colors duration-200">
+                                <i class="fas fa-file-alt mr-2"></i> Download Notes
+                            </button>
+                            <button class="bg-indigo-500 hover:bg-indigo-600 text-white font-bold py-2 px-4 rounded-lg transition-colors duration-200">
+                                <i class="fas fa-video mr-2"></i> Download Video
+                            </button>
+                        </div>
+                        <p class="text-gray-700">Task: Write a detailed report on the differences between FCFS and Round Robin scheduling algorithms.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Assignment Upload Page Content -->
+        <div id="assignment-upload" class="page-content">
+            <div class="bg-white p-8 rounded-lg shadow-lg">
+                <h2 class="text-2xl font-semibold text-gray-900 mb-6 border-b-2 pb-2">Assignment Upload</h2>
+                <form class="space-y-6">
+                    <div>
+                        <label for="assignment-select" class="block text-sm font-medium text-gray-700">Select Assignment</label>
+                        <select id="assignment-select" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
+                            <option>Data Structures: Linked Lists</option>
+                            <option>Operating Systems: CPU Scheduling</option>
+                            <option>Database Management: SQL Queries</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="assignment-file" class="block text-sm font-medium text-gray-700">Upload File</label>
+                        <div class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-lg">
+                            <div class="space-y-1 text-center">
+                                <svg class="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48" aria-hidden="true">
+                                    <path d="M28 8H12a2 2 0 00-2 2v20m3-3v8a2 2 0 002 2h20a2 2 0 002-2V8m-2 0V6a2 2 0 012-2h2a2 2 0 012 2v2m-2-2h-2m-2 2H12m24 8H12" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                </svg>
+                                <div class="flex text-sm text-gray-600">
+                                    <label for="file-upload" class="relative cursor-pointer bg-white rounded-md font-medium text-indigo-600 hover:text-indigo-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-indigo-500">
+                                        <span>Upload a file</span>
+                                        <input id="file-upload" name="file-upload" type="file" class="sr-only">
+                                    </label>
+                                    <p class="pl-1">or drag and drop</p>
+                                </div>
+                                <p class="text-xs text-gray-500">PDF, DOCX, ZIP up to 10MB</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <button type="submit" class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                            Submit Assignment
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        const navLinks = document.querySelectorAll('.nav-link');
+        const pages = document.querySelectorAll('.page-content');
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileSidebar = document.getElementById('mobile-sidebar');
+        const closeMobileMenuButton = document.getElementById('close-mobile-menu');
+
+        // Function to show a specific page
+        function showPage(pageId) {
+            pages.forEach(page => {
+                page.classList.remove('active');
+            });
+            document.getElementById(pageId).classList.add('active');
+        }
+
+        // Set the active link
+        function setActiveLink(pageId) {
+            navLinks.forEach(link => {
+                if (link.dataset.page === pageId) {
+                    link.classList.add('bg-indigo-100', 'text-indigo-600');
+                } else {
+                    link.classList.remove('bg-indigo-100', 'text-indigo-600');
+                }
+            });
+        }
+
+        // Handle navigation clicks
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const pageId = link.dataset.page;
+                showPage(pageId);
+                setActiveLink(pageId);
+                // Close mobile menu after selection
+                if (mobileSidebar.classList.contains('translate-x-0')) {
+                    mobileSidebar.classList.remove('translate-x-0');
+                    mobileSidebar.classList.add('-translate-x-full');
+                }
+            });
+        });
+
+        // Mobile menu toggle functionality
+        mobileMenuButton.addEventListener('click', () => {
+            mobileSidebar.classList.remove('-translate-x-full');
+            mobileSidebar.classList.add('translate-x-0');
+        });
+
+        closeMobileMenuButton.addEventListener('click', () => {
+            mobileSidebar.classList.remove('translate-x-0');
+            mobileSidebar.classList.add('-translate-x-full');
+        });
+
+        // Set initial active state
+        document.addEventListener('DOMContentLoaded', () => {
+            showPage('profile');
+            setActiveLink('profile');
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Faculty Signup</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        
+        :root {
+            --color-primary: #4f46e5; /* indigo-600 */
+            --color-secondary: #8b5cf6; /* violet-500 */
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+            transition: background-color 0.5s ease-in-out;
+            animation: gradient-shift 10s ease-in-out infinite alternate;
+        }
+        
+        @keyframes gradient-shift {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 100% 50%; }
+        }
+
+        .glass-container {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+            animation: slideIn 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateY(-50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .input-field {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            transition: all 0.3s ease;
+        }
+
+        .input-field::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .input-field:focus {
+            outline: none;
+            box-shadow: 0 0 0 2px white, 0 0 0 4px var(--color-primary);
+        }
+
+        .btn-primary {
+            transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Custom Modal CSS */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            animation: fadeIn 0.3s ease-out;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            width: 90%;
+            max-width: 400px;
+            text-align: center;
+            animation: zoomIn 0.3s ease-out;
+        }
+        
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes zoomIn { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+    </style>
+</head>
+<body class="flex items-center justify-center min-h-screen p-4 text-white">
+    <div class="glass-container w-full max-w-md mx-auto p-8 md:p-12 rounded-2xl shadow-xl">
+        <h1 class="text-4xl md:text-5xl font-extrabold text-center mb-6 drop-shadow-lg">Faculty Signup</h1>
+        <p class="text-center text-gray-200 mb-8 font-light">Create your faculty account.</p>
+        
+        <form id="signupForm" class="space-y-6">
+    <div>
+        <label for="name" class="block text-sm font-medium mb-2">Name</label>
+        <input type="text" id="name" name="name" required placeholder="Full Name" class="input-field w-full px-5 py-3 rounded-lg border-2 border-transparent focus:border-white" />
+    </div>
+    <div>
+        <label for="email" class="block text-sm font-medium mb-2">Email Address</label>
+        <input type="email" id="email" name="email" required placeholder="faculty@university.edu" class="input-field w-full px-5 py-3 rounded-lg border-2 border-transparent focus:border-white" />
+    </div>
+    <div>
+        <label for="password" class="block text-sm font-medium mb-2">Password</label>
+        <input type="password" id="password" name="password" required placeholder="********" class="input-field w-full px-5 py-3 rounded-lg border-2 border-transparent focus:border-white" />
+    </div>
+    <div>
+        <label for="department" class="block text-sm font-medium mb-2">Department</label>
+        <input type="text" id="department" name="department" required placeholder="CSE" class="input-field w-full px-5 py-3 rounded-lg border-2 border-transparent focus:border-white" />
+    </div>
+    <div>
+        <label for="contactNumber" class="block text-sm font-medium mb-2">Contact Number</label>
+        <input type="number" id="contactNumber" name="contactNumber" required placeholder="9876543210" class="input-field w-full px-5 py-3 rounded-lg border-2 border-transparent focus:border-white" />
+    </div>
+    <button type="submit" class="btn-primary w-full bg-white text-gray-900 font-semibold py-3 rounded-lg shadow-md hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+        Sign Up
+    </button>
+</form>
+        
+        <p class="text-center text-gray-300 text-sm mt-6">
+            Already have an account? <a href="faculty_login.html" class="font-medium text-white hover:underline transition-colors">Log in</a>
+        </p>
+    </div>
+
+    <!-- Custom Modal for Messages -->
+    <div id="messageModal" class="modal">
+        <div class="modal-content">
+            <h3 id="modalTitle" class="text-xl font-bold text-gray-800 mb-4"></h3>
+            <p id="modalMessage" class="text-gray-600 mb-6"></p>
+            <button id="closeModal" class="bg-blue-600 text-white font-semibold px-6 py-2 rounded-md hover:bg-blue-700 transition">Close</button>
+        </div>
+    </div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const signupForm = document.getElementById('signupForm');
+        const messageModal = document.getElementById('messageModal');
+        const modalTitle = document.getElementById('modalTitle');
+        const modalMessage = document.getElementById('modalMessage');
+        const closeModalBtn = document.getElementById('closeModal');
+
+        const showMessage = (title, message) => {
+            modalTitle.textContent = title;
+            modalMessage.textContent = message;
+            messageModal.style.display = 'flex';
+        };
+
+        const hideMessage = () => {
+            messageModal.style.display = 'none';
+        };
+
+        closeModalBtn.addEventListener('click', hideMessage);
+        messageModal.addEventListener('click', (e) => {
+            if (e.target === messageModal) hideMessage();
+        });
+
+        signupForm.addEventListener('submit', (e) => {
+            e.preventDefault(); // stop default form submission
+
+            // Collect form data
+            const name = document.getElementById('name').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value.trim();
+            const department = document.getElementById('department').value.trim();
+            const contactNumber = document.getElementById('contactNumber').value.trim();
+
+            // Basic validation
+            let isValid = true;
+            if (!name) isValid = false;
+            if (!email || !email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) isValid = false;
+            if (password.length < 6) isValid = false;
+            if (!department) isValid = false;
+            if (contactNumber.length !== 10) isValid = false;
+
+            if (isValid) {
+                // Send signup request to backend
+                fetch('/api/auth/faculty/signup', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name, email, password, department, contactNumber })
+                })
+                .then(res => res.json().then(data => ({ status: res.status, body: data })))
+                .then(({ status, body }) => {
+                    if (status === 201) {
+                        showMessage('Signup Successful!', 'Redirecting to dashboard...');
+                        setTimeout(() => {
+                            window.location.href = 'faculty_portal.html';
+                        }, 1200);
+                    } else {
+                        showMessage('Signup Failed', body.message || 'Please check your details.');
+                    }
+                })
+                .catch(() => {
+                    showMessage('Error', 'Something went wrong. Please try again.');
+                });
+            } else {
+                showMessage('Validation Error', 'Please fix the errors and try again.');
+            }
+        });
+    });
+</script>
+</body>
+</html>

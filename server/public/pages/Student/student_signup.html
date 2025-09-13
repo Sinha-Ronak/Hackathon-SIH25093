@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Student Signup</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+    :root { --color-primary: #3b82f6; --color-secondary: #0ea5e9; }
+    body { font-family: 'Inter', sans-serif; background: linear-gradient(135deg, var(--color-primary), var(--color-secondary)); }
+    .glass-container { background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.2); }
+    .input-field { background: rgba(255, 255, 255, 0.1); color: white; }
+    .input-field::placeholder { color: rgba(255, 255, 255, 0.6); }
+    .btn-primary:hover { transform: translateY(-2px); }
+    .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); justify-content: center; align-items: center; }
+    .modal-content { background: white; padding: 30px; border-radius: 12px; width: 90%; max-width: 400px; text-align: center; }
+  </style>
+</head>
+<body class="flex items-center justify-center min-h-screen p-4 text-white">
+  <div class="glass-container w-full max-w-md mx-auto p-8 rounded-2xl shadow-xl">
+    <h1 class="text-4xl font-extrabold text-center mb-6">Student Signup</h1>
+    <form id="signupForm" class="space-y-6">
+      <div>
+        <label for="name" class="block mb-2">Name</label>
+        <input type="text" id="name" required placeholder="Full Name" class="input-field w-full px-4 py-3 rounded-lg" />
+        <p id="nameError" class="text-red-300 text-sm mt-2 hidden">Name is required.</p>
+      </div>
+      <div>
+        <label for="email" class="block mb-2">Email</label>
+        <input type="email" id="email" required placeholder="student@school.edu" class="input-field w-full px-4 py-3 rounded-lg" />
+        <p id="emailError" class="text-red-300 text-sm mt-2 hidden"></p>
+      </div>
+      <div>
+        <label for="password" class="block mb-2">Password</label>
+        <div class="relative">
+          <input type="password" id="password" required placeholder="********" class="input-field w-full px-4 py-3 rounded-lg" />
+          <button type="button" id="togglePassword" class="absolute right-3 top-3 text-gray-300"><i class="fas fa-eye"></i></button>
+        </div>
+        <p id="passwordError" class="text-red-300 text-sm mt-2 hidden"></p>
+      </div>
+      <div>
+        <label for="year" class="block mb-2">Year</label>
+        <input type="number" id="year" required placeholder="2025" class="input-field w-full px-4 py-3 rounded-lg" />
+        <p id="yearError" class="text-red-300 text-sm mt-2 hidden">Year is required.</p>
+      </div>
+      <div>
+        <label for="department" class="block mb-2">Department</label>
+        <input type="text" id="department" required placeholder="CSE" class="input-field w-full px-4 py-3 rounded-lg" />
+        <p id="departmentError" class="text-red-300 text-sm mt-2 hidden">Department is required.</p>
+      </div>
+      <div>
+        <label for="course" class="block mb-2">Course</label>
+        <input type="text" id="course" required placeholder="BTECH" class="input-field w-full px-4 py-3 rounded-lg" />
+        <p id="courseError" class="text-red-300 text-sm mt-2 hidden">Course is required.</p>
+      </div>
+      <div>
+        <label for="contactNumber" class="block mb-2">Contact Number</label>
+        <input type="number" id="contactNumber" required placeholder="9876543210" class="input-field w-full px-4 py-3 rounded-lg" />
+        <p id="contactNumberError" class="text-red-300 text-sm mt-2 hidden">Contact number must be 10 digits.</p>
+      </div>
+      <button type="submit" class="btn-primary w-full bg-white text-gray-900 font-semibold py-3 rounded-lg">Sign Up</button>
+    </form>
+  </div>
+
+  <!-- Modal -->
+  <div id="messageModal" class="modal">
+    <div class="modal-content">
+      <h3 id="modalTitle" class="text-xl font-bold mb-4"></h3>
+      <p id="modalMessage" class="mb-6"></p>
+      <button id="closeModal" class="bg-blue-600 text-white px-6 py-2 rounded-md">Close</button>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const signupForm = document.getElementById('signupForm');
+      const emailInput = document.getElementById('email');
+      const passwordInput = document.getElementById('password');
+      const confirmPasswordInput = document.getElementById('confirmPassword');
+      const emailError = document.getElementById('emailError');
+      const passwordError = document.getElementById('passwordError');
+      const confirmPasswordError = document.getElementById('confirmPasswordError');
+      const togglePassword = document.getElementById('togglePassword');
+      const toggleConfirmPassword = document.getElementById('toggleConfirmPassword');
+      const messageModal = document.getElementById('messageModal');
+      const modalTitle = document.getElementById('modalTitle');
+      const modalMessage = document.getElementById('modalMessage');
+      const closeModalBtn = document.getElementById('closeModal');
+
+      const showMessage = (title, message) => {
+        modalTitle.textContent = title;
+        modalMessage.textContent = message;
+        messageModal.style.display = 'flex';
+      };
+      const hideMessage = () => (messageModal.style.display = 'none');
+      closeModalBtn.addEventListener('click', hideMessage);
+      messageModal.addEventListener('click', e => { if (e.target === messageModal) hideMessage(); });
+
+      // Toggle password visibility
+      togglePassword.addEventListener('click', () => {
+        const type = passwordInput.type === 'password' ? 'text' : 'password';
+        passwordInput.type = type;
+        togglePassword.innerHTML = type === 'password' ? '<i class="fas fa-eye"></i>' : '<i class="fas fa-eye-slash"></i>';
+      });
+
+      // Realtime validation
+      emailInput.addEventListener('input', () => {
+        emailError.textContent = emailInput.validity.valid ? '' : 'Enter a valid email';
+        emailError.classList.toggle('hidden', emailInput.validity.valid);
+      });
+      passwordInput.addEventListener('input', () => {
+        if (passwordInput.value.length >= 8) {
+          passwordError.classList.add('hidden');
+        } else {
+          passwordError.textContent = 'Password must be at least 8 characters';
+          passwordError.classList.remove('hidden');
+        }
+      });
+
+      // Submit
+      signupForm.addEventListener('submit', e => {
+        e.preventDefault();
+        const name = document.getElementById('name').value.trim();
+        const email = emailInput.value.trim();
+        const password = passwordInput.value.trim();
+        const year = document.getElementById('year').value.trim();
+        const department = document.getElementById('department').value.trim();
+        const course = document.getElementById('course').value.trim();
+        const contactNumber = document.getElementById('contactNumber').value.trim();
+
+        let isValid = true;
+        if (!name) { document.getElementById('nameError').classList.remove('hidden'); isValid = false; }
+        if (!email || !email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) { emailError.classList.remove('hidden'); isValid = false; }
+        if (password.length < 6) { passwordError.classList.remove('hidden'); isValid = false; }
+        if (!year) { document.getElementById('yearError').classList.remove('hidden'); isValid = false; }
+        if (!department) { document.getElementById('departmentError').classList.remove('hidden'); isValid = false; }
+        if (!course) { document.getElementById('courseError').classList.remove('hidden'); isValid = false; }
+        if (contactNumber.length !== 10) { document.getElementById('contactNumberError').classList.remove('hidden'); isValid = false; }
+
+        if (isValid) {
+          fetch('/api/auth/student/signup', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name, email, password, year, department, course, contactNumber })
+          })
+          .then(res => res.json().then(data => ({ status: res.status, body: data })))
+          .then(({ status, body }) => {
+            if (status === 201) {
+              showMessage('Signup Successful!', 'Redirecting to dashboard...');
+              setTimeout(() => { window.location.href = 'Student_portal.html'; }, 1200);
+            } else {
+              showMessage('Signup Failed', body.message || 'Please check your details.');
+            }
+          })
+          .catch(() => showMessage('Error', 'Something went wrong. Please try again.'));
+        } else {
+          showMessage('Validation Error', 'Please fix the errors and try again.');
+        }
+      });
+    });
+  </script>
+</body>
+</html>

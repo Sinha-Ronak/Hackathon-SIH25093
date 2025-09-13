@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" xintegrity="sha512-..." crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        .sidebar {
+            transition: all 0.3s ease-in-out;
+        }
+        @media (max-width: 1023px) {
+            .sidebar.collapsed {
+                transform: translateX(-100%);
+            }
+        }
+        .sidebar-link.active {
+            background-color: #e2e8f0; 
+            color: #1a202c; 
+            border-left: 4px solid #4299e1; 
+        }
+    </style>
+</head>
+<body class="bg-gray-100 text-gray-800">
+
+    <div class="flex h-screen overflow-hidden">
+        <!-- Sidebar -->
+        <div id="sidebar" class="sidebar flex flex-col w-64 bg-white shadow-xl lg:shadow-none lg:translate-x-0 transform -translate-x-full">
+            <!-- Sidebar Header -->
+            <div class="p-6">
+                <h1 class="text-2xl font-bold text-blue-600">Admin Panel</h1>
+            </div>
+            <!-- Sidebar Nav -->
+            <nav class="flex-1 px-4 py-6 space-y-2">
+                <a href="#" data-target="dashboard" class="sidebar-link active flex items-center p-4 rounded-r-full text-gray-600 hover:bg-gray-200 hover:text-gray-900 transition-colors duration-200 ease-in-out">
+                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0h6m-6 0h-6"></path></svg>
+                    <span>Dashboard</span>
+                </a>
+                <a href="#" data-target="manage-users" class="sidebar-link flex items-center p-4 rounded-r-full text-gray-600 hover:bg-gray-200 hover:text-gray-900 transition-colors duration-200 ease-in-out">
+                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a4 4 0 014-4h.25a2 2 0 011.898 1.343M17 19h3m-3 0V7m-1 5l3-3m0 0l3 3m-3-3l-3 3"></path></svg>
+                    <span>Manage Users</span>
+                </a>
+                <a href="#" data-target="pending-work" class="sidebar-link flex items-center p-4 rounded-r-full text-gray-600 hover:bg-gray-200 hover:text-gray-900 transition-colors duration-200 ease-in-out">
+                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    <span>Pending Work</span>
+                </a>
+                <a href="#" data-target="track-salaries" class="sidebar-link flex items-center p-4 rounded-r-full text-gray-600 hover:bg-gray-200 hover:text-gray-900 transition-colors duration-200 ease-in-out">
+                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9v6m-4-6v6m-4-6v6m-4-6v6m-4-6v6"></path></svg>
+                    <span>Track Salaries</span>
+                </a>
+                <a href="#" data-target="fee-status" class="sidebar-link flex items-center p-4 rounded-r-full text-gray-600 hover:bg-gray-200 hover:text-gray-900 transition-colors duration-200 ease-in-out">
+                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2v-8z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10v4a2 2 0 002 2h14a2 2 0 002-2v-4M3 10a2 2 0 012-2h14a2 2 0 012 2M7 16h10m-5-8V5a2 2 0 00-2-2H9a2 2 0 00-2 2v3"></path></svg>
+                    <span>Fee Status</span>
+                </a>
+                <a href="#" data-target="verify-docs" class="sidebar-link flex items-center p-4 rounded-r-full text-gray-600 hover:bg-gray-200 hover:text-gray-900 transition-colors duration-200 ease-in-out">
+                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2-7a2 2 0 012-2h2a2 2 0 012 2v1a2 2 0 01-2 2h-2a2 2 0 01-2-2V9zM7 9a2 2 0 012-2h2a2 2 0 012 2v1a2 2 0 01-2 2H9a2 2 0 01-2-2V9zM5 12a2 2 0 012-2h2a2 2 0 012 2v1a2 2 0 01-2 2H7a2 2 0 01-2-2v-1z"></path></svg>
+                    <span>Verify Docs</span>
+                </a>
+                <a href="#" data-target="finance" class="sidebar-link flex items-center p-4 rounded-r-full text-gray-600 hover:bg-gray-200 hover:text-gray-900 transition-colors duration-200 ease-in-out">
+                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.333-3-4-5-8-5s-8 2-8 5m8 0a8 8 0 008 8 8 8 0 008-8m-8 0v-2h-2m-2 0h-2"></path></svg>
+                    <span>Finance</span>
+                </a>
+            </nav>
+        </div>
+
+        <!-- Main Content -->
+        <main class="flex-1 p-8 overflow-y-auto">
+            <header class="flex items-center justify-between mb-8">
+                <h2 class="text-3xl font-semibold text-gray-900">Admin Dashboard</h2>
+                <button id="menu-button" class="lg:hidden p-2 text-gray-500 hover:text-gray-900 focus:outline-none">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+                </button>
+            </header>
+            
+            <!-- Dashboard Content Section -->
+            <section id="dashboard" class="content-section">
+                <h3 class="text-2xl font-bold text-gray-900 mb-6">Personal Dashboard</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                    <div class="bg-white p-6 rounded-lg shadow-md flex items-center justify-between">
+                        <div>
+                            <p class="text-sm font-medium text-gray-500">Total Students</p>
+                            <p class="text-3xl font-bold text-gray-900 mt-1">1,250</p>
+                        </div>
+                        <svg class="w-10 h-10 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20v-2a4 4 0 00-4-4H7a4 4 0 00-4 4v2m4-4a4 4 0 100-8 4 4 0 000 8zM17 10l-4-4-4 4"></path></svg>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow-md flex items-center justify-between">
+                        <div>
+                            <p class="text-sm font-medium text-gray-500">Total Faculty</p>
+                            <p class="text-3xl font-bold text-gray-900 mt-1">85</p>
+                        </div>
+                        <svg class="w-10 h-10 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a4 4 0 014-4h.25a2 2 0 011.898 1.343M17 19h3m-3 0V7m-1 5l3-3m0 0l3 3m-3-3l-3 3"></path></svg>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow-md flex items-center justify-between">
+                        <div>
+                            <p class="text-sm font-medium text-gray-500">Pending Fees</p>
+                            <p class="text-3xl font-bold text-gray-900 mt-1">32</p>
+                        </div>
+                        <svg class="w-10 h-10 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9v6m-4-6v6m-4-6v6m-4-6v6m-4-6v6"></path></svg>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow-md flex items-center justify-between">
+                        <div>
+                            <p class="text-sm font-medium text-gray-500">Documents to Verify</p>
+                            <p class="text-3xl font-bold text-gray-900 mt-1">11</p>
+                        </div>
+                        <svg class="w-10 h-10 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2-7a2 2 0 012-2h2a2 2 0 012 2v1a2 2 0 01-2 2h-2a2 2 0 01-2-2V9zM7 9a2 2 0 012-2h2a2 2 0 012 2v1a2 2 0 01-2 2H9a2 2 0 01-2-2V9zM5 12a2 2 0 012-2h2a2 2 0 012 2v1a2 2 0 01-2 2H7a2 2 0 01-2-2v-1z"></path></svg>
+                    </div>
+                </div>
+
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <h4 class="text-xl font-semibold mb-4">Student & Faculty Performance Overview</h4>
+                    <p class="text-gray-600">This section would show a detailed overview of academic performance, such as average GPA per department or faculty-specific metrics. This is a placeholder for a more complex feature.</p>
+                </div>
+            </section>
+
+            <!-- Manage Users Section -->
+            <section id="manage-users" class="content-section hidden">
+                <h3 class="text-2xl font-bold text-gray-900 mb-6">Manage Students & Faculty</h3>
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <div class="bg-white p-6 rounded-lg shadow-md">
+                        <h4 class="text-xl font-semibold mb-4">Add New User</h4>
+                        <form id="add-user-form" class="space-y-4">
+                            <div>
+                                <label for="user-type" class="block text-sm font-medium text-gray-700">User Type</label>
+                                <select id="user-type" name="user-type" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-2">
+                                    <option value="student">Student</option>
+                                    <option value="faculty">Faculty</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="user-name" class="block text-sm font-medium text-gray-700">Name</label>
+                                <input type="text" id="user-name" name="user-name" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-2">
+                            </div>
+                            <div>
+                                <label for="user-email" class="block text-sm font-medium text-gray-700">Email</label>
+                                <input type="email" id="user-email" name="user-email" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-2">
+                            </div>
+                            <button type="submit" class="w-full bg-blue-600 text-white p-2 rounded-lg font-semibold hover:bg-blue-700 transition-colors duration-200">Register and Add</button>
+                        </form>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow-md">
+                        <h4 class="text-xl font-semibold mb-4">Remove User</h4>
+                        <form id="remove-user-form" class="space-y-4">
+                            <div>
+                                <label for="remove-user-email" class="block text-sm font-medium text-gray-700">User Email</label>
+                                <input type="email" id="remove-user-email" name="remove-user-email" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-2">
+                            </div>
+                            <button type="submit" class="w-full bg-red-600 text-white p-2 rounded-lg font-semibold hover:bg-red-700 transition-colors duration-200">Remove User</button>
+                        </form>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Pending Work Section -->
+            <section id="pending-work" class="content-section hidden">
+                <h3 class="text-2xl font-bold text-gray-900 mb-6">Pending Work</h3>
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <ul class="divide-y divide-gray-200">
+                        <li class="py-4 flex items-center justify-between">
+                            <span class="text-lg text-gray-800">Conduct Mid-Semester Exams</span>
+                            <span class="text-sm text-gray-500">Due: Oct 15</span>
+                        </li>
+                        <li class="py-4 flex items-center justify-between">
+                            <span class="text-lg text-gray-800">Organize Seminar for Students (AI in Tech)</span>
+                            <span class="text-sm text-gray-500">Due: Nov 5</span>
+                        </li>
+                        <li class="py-4 flex items-center justify-between">
+                            <span class="text-lg text-gray-800">Prepare for Upcoming Sports Event</span>
+                            <span class="text-sm text-gray-500">Due: Dec 1</span>
+                        </li>
+                        <li class="py-4 flex items-center justify-between">
+                            <span class="text-lg text-gray-800">Update Student Records</span>
+                            <span class="text-sm text-gray-500">Due: Sep 30</span>
+                        </li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Track Salaries Section -->
+            <section id="track-salaries" class="content-section hidden">
+                <h3 class="text-2xl font-bold text-gray-900 mb-6">Track Faculty Salaries</h3>
+                <div class="bg-white p-6 rounded-lg shadow-md overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Department</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Salary</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-200">
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap">John Smith</td>
+                                <td class="px-6 py-4 whitespace-nowrap">Computer Science</td>
+                                <td class="px-6 py-4 whitespace-nowrap">$65,000</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-green-500">Paid</td>
+                            </tr>
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap">Jane Doe</td>
+                                <td class="px-6 py-4 whitespace-nowrap">Physics</td>
+                                <td class="px-6 py-4 whitespace-nowrap">$72,000</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-green-500">Paid</td>
+                            </tr>
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap">Peter Jones</td>
+                                <td class="px-6 py-4 whitespace-nowrap">Mathematics</td>
+                                <td class="px-6 py-4 whitespace-nowrap">$68,500</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-yellow-500">Pending</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Fee Status Section -->
+            <section id="fee-status" class="content-section hidden">
+                <h3 class="text-2xl font-bold text-gray-900 mb-6">Student Fee Payment Status</h3>
+                <div class="bg-white p-6 rounded-lg shadow-md overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Student Name</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Amount Due</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-200">
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap">Alice Williams</td>
+                                <td class="px-6 py-4 whitespace-nowrap">STU101</td>
+                                <td class="px-6 py-4 whitespace-nowrap">$5,000</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-green-500">Paid</td>
+                            </tr>
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap">Bob Johnson</td>
+                                <td class="px-6 py-4 whitespace-nowrap">STU102</td>
+                                <td class="px-6 py-4 whitespace-nowrap">$5,000</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-red-500">Pending</td>
+                            </tr>
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap">Charlie Brown</td>
+                                <td class="px-6 py-4 whitespace-nowrap">STU103</td>
+                                <td class="px-6 py-4 whitespace-nowrap">$5,000</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-green-500">Paid</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Verify Docs Section -->
+            <section id="verify-docs" class="content-section hidden">
+                <h3 class="text-2xl font-bold text-gray-900 mb-6">Verify Documents</h3>
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <ul class="divide-y divide-gray-200">
+                        <li class="py-4 flex items-center justify-between">
+                            <div>
+                                <p class="text-lg text-gray-800">Faculty - Dr. Amy Lee</p>
+                                <p class="text-sm text-gray-500">Awaiting Degree Certificate verification</p>
+                            </div>
+                            <button class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition-colors duration-200">Verify</button>
+                        </li>
+                        <li class="py-4 flex items-center justify-between">
+                            <div>
+                                <p class="text-lg text-gray-800">Student - David Wilson</p>
+                                <p class="text-sm text-gray-500">Awaiting ID Proof verification</p>
+                            </div>
+                            <button class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition-colors duration-200">Verify</button>
+                        </li>
+                        <li class="py-4 flex items-center justify-between">
+                            <div>
+                                <p class="text-lg text-gray-800">Faculty - Dr. Michael Chen</p>
+                                <p class="text-sm text-gray-500">Awaiting Resume verification</p>
+                            </div>
+                            <button class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition-colors duration-200">Verify</button>
+                        </li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Finance Section -->
+            <section id="finance" class="content-section hidden">
+                <h3 class="text-2xl font-bold text-gray-900 mb-6">Financial Overview</h3>
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <p class="text-gray-600">This section would include detailed financial reports, budget tracking, and other accounting information. For example, it could show income from fees and expenses like salaries and maintenance.  </p>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const navLinks = document.querySelectorAll('.sidebar-link');
+            const contentSections = document.querySelectorAll('.content-section');
+            const menuButton = document.getElementById('menu-button');
+            const sidebar = document.getElementById('sidebar');
+
+            // Function to show a specific section
+            const showSection = (targetId) => {
+                // Hide all sections
+                contentSections.forEach(section => {
+                    section.classList.add('hidden');
+                });
+
+                // Show the target section
+                const targetSection = document.getElementById(targetId);
+                if (targetSection) {
+                    targetSection.classList.remove('hidden');
+                }
+            };
+
+            // Function to set the active link
+            const setActiveLink = (link) => {
+                navLinks.forEach(l => l.classList.remove('active'));
+                link.classList.add('active');
+            };
+
+            // Add click event listeners to nav links
+            navLinks.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const targetId = link.getAttribute('data-target');
+                    showSection(targetId);
+                    setActiveLink(link);
+                    // Hide sidebar on mobile after click
+                    if (window.innerWidth < 1024) {
+                        sidebar.classList.add('collapsed');
+                    }
+                });
+            });
+
+            // Toggle sidebar on mobile
+            menuButton.addEventListener('click', () => {
+                sidebar.classList.toggle('collapsed');
+            });
+
+            // Set initial active link and show the dashboard section
+            const initialLink = document.querySelector('.sidebar-link[data-target="dashboard"]');
+            if (initialLink) {
+                showSection('dashboard');
+                setActiveLink(initialLink);
+            }
+        });
+    </script>
+
+</body>
+</html>
