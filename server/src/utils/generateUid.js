@@ -1,11 +1,8 @@
 const departmentCodes = {
     CSE: '01',
-    ECE: '02',
-    ME: '03',
-    CE: '04',
-    EE: '05',
-    IT: '06',
-    AIDS: '07',
+    ME: '02',
+    IT: '03',
+    AIDS: '04',
 };
 
 const courseCodes = {

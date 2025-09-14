@@ -47,12 +47,22 @@
       </div>
       <div>
         <label for="department" class="block mb-2">Department</label>
-        <input type="text" id="department" required placeholder="CSE" class="input-field w-full px-4 py-3 rounded-lg" />
+        <select id="department" required class="input-field w-full px-4 py-3 rounded-lg">
+          <option value="" disabled selected class="text-gray-400 bg-gray-800">Select Department</option>
+          <option value="CSE" class="text-black bg-white">CSE</option>
+          <option value="ME" class="text-black bg-white">ME</option>
+          <option value="IT" class="text-black bg-white">IT</option>
+          <option value="AIDS" class="text-black bg-white">AIDS</option>
+        </select>
         <p id="departmentError" class="text-red-300 text-sm mt-2 hidden">Department is required.</p>
       </div>
       <div>
         <label for="course" class="block mb-2">Course</label>
-        <input type="text" id="course" required placeholder="BTECH" class="input-field w-full px-4 py-3 rounded-lg" />
+        <select id="course" required class="input-field w-full px-4 py-3 rounded-lg">
+          <option value="" disabled selected class="text-gray-400 bg-gray-800">Select Course</option>
+          <option value="DIPLOMA" class="text-black bg-white">DIPLOMA</option>
+          <option value="DEGREE" class="text-black bg-white">DEGREE</option>
+        </select>
         <p id="courseError" class="text-red-300 text-sm mt-2 hidden">Course is required.</p>
       </div>
       <div>
@@ -163,3 +173,5 @@
   </script>
 </body>
 </html>
+
+

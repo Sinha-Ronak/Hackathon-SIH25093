@@ -114,7 +114,13 @@
     </div>
     <div>
         <label for="department" class="block text-sm font-medium mb-2">Department</label>
-        <input type="text" id="department" name="department" required placeholder="CSE" class="input-field w-full px-5 py-3 rounded-lg border-2 border-transparent focus:border-white" />
+        <select id="department" required class="input-field w-full px-4 py-3 rounded-lg">
+          <option value="" disabled selected class="text-gray-400 bg-gray-800">Select Department</option>
+          <option value="CSE" class="text-black bg-white">CSE</option>
+          <option value="ME" class="text-black bg-white">ME</option>
+          <option value="IT" class="text-black bg-white">IT</option>
+          <option value="AIDS" class="text-black bg-white">AIDS</option>
+        </select>
     </div>
     <div>
         <label for="contactNumber" class="block text-sm font-medium mb-2">Contact Number</label>
