@@ -6,10 +6,8 @@ const departmentCodes = {
 };
 
 const courseCodes = {
-    BTECH: '01',
-    MTECH: '02',
-    PHD: '03',
-    DIPLOMA: '04',
+    DEGREE: '01',
+    DIPLOMA: '02',
 }
 
 const collegeCode = '455';

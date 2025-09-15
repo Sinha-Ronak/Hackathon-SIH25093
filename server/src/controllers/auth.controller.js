@@ -52,7 +52,7 @@ export const studentSignup = async (req, res) => {
         res.status(400).json({ message: "Invalid Student data" });
     }
   } catch (error) {
-    res.status(500).json({ message: "Internal server error" });
+    res.status(500).json({ message: "Internal server error", error: error.message });
   }
 }
 
