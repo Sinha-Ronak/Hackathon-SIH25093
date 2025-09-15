@@ -2,7 +2,10 @@ import express from 'express'
 import path from 'path'
 import { fileURLToPath } from 'url';
 import { authenticateAdmin } from '../middlewares/auth.middleware.js';
-import { adminPanelController } from '../controllers/pages.controller.js';
+import { adminPanelController, searchStudentController, searchFacultyController } from '../controllers/pages.controller.js';
+// Search student by enrollmentNumber
+
+// Search faculty by employeeId
 
 const router = express.Router();
 const __filename = fileURLToPath(import.meta.url);
@@ -35,5 +38,9 @@ router.get('/student/login', (req, res) => {
 
 // API endpoint for admin dashboard
 router.get('/admin/dashboard', adminPanelController);
+
+router.get('/admin/search/faculty', searchFacultyController);
+
+router.get('/admin/search/student', searchStudentController);
 
 export default router;

@@ -1,5 +1,30 @@
+import Admin from "../models/admin.model.js";
 import Student from "../models/student.model.js";
 import Faculty from "../models/faculty.model.js";
+
+// Search student by enrollmentNumber
+export const searchStudentController = async (req, res) => {
+	const { id } = req.query;
+	try {
+		const student = await Student.findOne({ enrollmentNumber: id }).select('-password -__v -_id -createdAt -updatedAt');
+		if (!student) return res.status(404).json({ message: "Student not found" });
+		res.json(student);
+	} catch (err) {
+		res.status(500).json({ message: "Error searching student" });
+	}
+};
+
+// Search faculty by employeeId
+export const searchFacultyController = async (req, res) => {
+	const { id } = req.query;
+	try {
+		const faculty = await Faculty.findOne({ employeeId: id }).select('-password -__v -_id -createdAt -updatedAt');
+		if (!faculty) return res.status(404).json({ message: "Faculty not found" });
+		res.json(faculty);
+	} catch (err) {
+		res.status(500).json({ message: "Error searching faculty" });
+	}
+};
 
 export const adminPanelController = async (req , res) => {
 	// For pending fees and salaries, assuming fields exist (e.g., feePaid, salaryPaid)
