@@ -35,7 +35,7 @@
       <div>
         <label for="password" class="block mb-2">Password</label>
         <div class="relative">
-          <input type="password" id="password" required placeholder="********" class="input-field w-full px-4 py-3 rounded-lg" />
+          <input type="password" id="password" required placeholder="" class="input-field w-full px-4 py-3 rounded-lg" />
           <button type="button" id="togglePassword" class="absolute right-3 top-3 text-gray-300"><i class="fas fa-eye"></i></button>
         </div>
         <p id="passwordError" class="text-red-300 text-sm mt-2 hidden"></p>
@@ -74,14 +74,15 @@
     </form>
   </div>
 
+ 
   <!-- Modal -->
-  <div id="messageModal" class="modal">
-    <div class="modal-content">
-      <h3 id="modalTitle" class="text-xl font-bold mb-4"></h3>
-      <p id="modalMessage" class="mb-6"></p>
-      <button id="closeModal" class="bg-blue-600 text-white px-6 py-2 rounded-md">Close</button>
-    </div>
+<div id="messageModal" class="modal">
+  <div class="modal-content">
+    <h3 id="modalTitle" class="text-xl font-bold mb-4 text-black"></h3>
+    <p id="modalMessage" class="mb-6 text-black"></p>
+    <button id="closeModal" class="bg-blue-600 text-white px-6 py-2 rounded-md">Close</button>
   </div>
+</div>
 
   <script>
     document.addEventListener('DOMContentLoaded', () => {
@@ -162,11 +163,13 @@
           })
           .then(res => res.json().then(data => ({ status: res.status, body: data })))
           .then(({ status, body }) => {
-            if (status === 201) {
-              showMessage('Signup Successful!', 'Redirecting to dashboard...');
-              // This is the corrected line
-            setTimeout(() => { window.location.href = 'student_portal.html'; }, 1200);
-            } else {
+            // ...existing code...
+if (status === 201) {
+  showMessage('Signup Successful!', 'Redirecting to dashboard...');
+  console.log('Redirecting to student_portal.html'); // Add this line
+  setTimeout(() => { window.location.href = 'student_portal.html'; }, 1200);
+} else {
+// ...existing code...
               showMessage('Signup Failed', body.message || 'Please check your details.');
             }
           })
