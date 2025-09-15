@@ -27,6 +27,10 @@ const facultySchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
+  salaryPaid: {
+    type: Boolean,
+    default: false,
+  },
 }, { timestamps: true }
 );
 

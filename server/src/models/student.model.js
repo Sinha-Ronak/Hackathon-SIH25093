@@ -35,6 +35,10 @@ const studentSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
+  feePaid: {
+    type: Boolean,
+    default: false,
+  },
   studentPoints: { 
     type: Number, default: 0 
   },  

@@ -13,31 +13,36 @@ export const studentSignup = async (req, res) => {
     }
     const ifEmailExists = await Student.findOne({ email });
     if (ifEmailExists) {
-        return res.status(400).json({ message: "Email already exists" });
+      return res.status(400).json({ message: "Email already exists" });
     }
+    
     if (password.length < 6) {
-        return res.status(400).json({ message: "Password must be at least 6 characters long" });
+      return res.status(400).json({ message: "Password must be at least 6 characters long" });
     }
+    
     if (contactNumber.toString().length !== 10) {
         return res.status(400).json({ message: "Contact number must be 10 digits long" });
     }
+    
     const hashedPassword = await bcrypt.hash(password, 10);
-
+    
+    
     const newEnrollmentNumber = genEnrollmentNumber(year, department, course);
-
-    const newStudent = new Student({
-        name,
-        email,
-        password: hashedPassword,
-        enrollmentNumber: newEnrollmentNumber,
-        year,
-        department,
-        course,
-        contactNumber,
-    })
+    
+  const newStudent = new Student({
+    name,
+    email,
+    password: hashedPassword,
+    enrollmentNumber: newEnrollmentNumber,
+    year,
+    department,
+    course,
+    contactNumber,
+    feePaid: false,
+  })
     if (newStudent) {
-        const token = generateJWT(newStudent._id, res);
-        await newStudent.save();
+      const token = generateJWT(newStudent._id, res);
+      await newStudent.save();
         res.status(201).json({ 
             message: "Signup successful",
             student: { id: newStudent._id, name: newStudent.name, email: newStudent.email, enrollmentNumber: newStudent.enrollmentNumber }

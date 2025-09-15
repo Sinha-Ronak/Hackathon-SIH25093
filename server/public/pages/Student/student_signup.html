@@ -48,7 +48,7 @@
       <div>
         <label for="department" class="block mb-2">Department</label>
         <select id="department" required class="input-field w-full px-4 py-3 rounded-lg">
-          <option value="" disabled selected class="text-gray-400 bg-gray-800">Select Department</option>
+          <option value="" disabled selected>Select Department</option>
           <option value="CSE" class="text-black bg-white">CSE</option>
           <option value="ME" class="text-black bg-white">ME</option>
           <option value="IT" class="text-black bg-white">IT</option>
@@ -59,7 +59,7 @@
       <div>
         <label for="course" class="block mb-2">Course</label>
         <select id="course" required class="input-field w-full px-4 py-3 rounded-lg">
-          <option value="" disabled selected class="text-gray-400 bg-gray-800">Select Course</option>
+          <option value="" disabled selected>Select Course</option>
           <option value="DIPLOMA" class="text-black bg-white">DIPLOMA</option>
           <option value="DEGREE" class="text-black bg-white">DEGREE</option>
         </select>
@@ -67,7 +67,7 @@
       </div>
       <div>
         <label for="contactNumber" class="block mb-2">Contact Number</label>
-        <input type="number" id="contactNumber" required placeholder="9876543210" class="input-field w-full px-4 py-3 rounded-lg" />
+        <input type="tel" id="contactNumber" required pattern="[0-9]{10}" placeholder="9876543210" class="input-field w-full px-4 py-3 rounded-lg" />
         <p id="contactNumberError" class="text-red-300 text-sm mt-2 hidden">Contact number must be 10 digits.</p>
       </div>
       <button type="submit" class="btn-primary w-full bg-white text-gray-900 font-semibold py-3 rounded-lg">Sign Up</button>
@@ -86,14 +86,13 @@
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       const signupForm = document.getElementById('signupForm');
+      const nameInput = document.getElementById('name');
+      const nameError = document.getElementById('nameError');
       const emailInput = document.getElementById('email');
       const passwordInput = document.getElementById('password');
-      const confirmPasswordInput = document.getElementById('confirmPassword');
       const emailError = document.getElementById('emailError');
       const passwordError = document.getElementById('passwordError');
-      const confirmPasswordError = document.getElementById('confirmPasswordError');
       const togglePassword = document.getElementById('togglePassword');
-      const toggleConfirmPassword = document.getElementById('toggleConfirmPassword');
       const messageModal = document.getElementById('messageModal');
       const modalTitle = document.getElementById('modalTitle');
       const modalMessage = document.getElementById('modalMessage');
@@ -117,9 +116,14 @@
 
       // Realtime validation
       emailInput.addEventListener('input', () => {
-        emailError.textContent = emailInput.validity.valid ? '' : 'Enter a valid email';
-        emailError.classList.toggle('hidden', emailInput.validity.valid);
+        if (emailInput.validity.valid) {
+          emailError.classList.add('hidden');
+        } else {
+          emailError.textContent = 'Enter a valid email';
+          emailError.classList.remove('hidden');
+        }
       });
+
       passwordInput.addEventListener('input', () => {
         if (passwordInput.value.length >= 8) {
           passwordError.classList.add('hidden');
@@ -132,22 +136,23 @@
       // Submit
       signupForm.addEventListener('submit', e => {
         e.preventDefault();
-        const name = document.getElementById('name').value.trim();
+        const name = nameInput.value.trim();
         const email = emailInput.value.trim();
         const password = passwordInput.value.trim();
         const year = document.getElementById('year').value.trim();
-        const department = document.getElementById('department').value.trim();
-        const course = document.getElementById('course').value.trim();
+        const department = document.getElementById('department').value;
+        const course = document.getElementById('course').value;
         const contactNumber = document.getElementById('contactNumber').value.trim();
 
         let isValid = true;
-        if (!name) { document.getElementById('nameError').classList.remove('hidden'); isValid = false; }
-        if (!email || !email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) { emailError.classList.remove('hidden'); isValid = false; }
-        if (password.length < 6) { passwordError.classList.remove('hidden'); isValid = false; }
-        if (!year) { document.getElementById('yearError').classList.remove('hidden'); isValid = false; }
-        if (!department) { document.getElementById('departmentError').classList.remove('hidden'); isValid = false; }
-        if (!course) { document.getElementById('courseError').classList.remove('hidden'); isValid = false; }
-        if (contactNumber.length !== 10) { document.getElementById('contactNumberError').classList.remove('hidden'); isValid = false; }
+
+        if (!name) { nameError.classList.remove('hidden'); isValid = false; } else { nameError.classList.add('hidden'); }
+        if (!email || !email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) { emailError.textContent = 'Enter a valid email'; emailError.classList.remove('hidden'); isValid = false; } else { emailError.classList.add('hidden'); }
+        if (password.length < 6) { passwordError.textContent = 'Password must be at least 8 characters'; passwordError.classList.remove('hidden'); isValid = false; } else { passwordError.classList.add('hidden'); }
+        if (!year) { document.getElementById('yearError').classList.remove('hidden'); isValid = false; } else { document.getElementById('yearError').classList.add('hidden'); }
+        if (!department) { document.getElementById('departmentError').classList.remove('hidden'); isValid = false; } else { document.getElementById('departmentError').classList.add('hidden'); }
+        if (!course) { document.getElementById('courseError').classList.remove('hidden'); isValid = false; } else { document.getElementById('courseError').classList.add('hidden'); }
+        if (contactNumber.length !== 10 || !/^\d{10}$/.test(contactNumber)) { document.getElementById('contactNumberError').classList.remove('hidden'); isValid = false; } else { document.getElementById('contactNumberError').classList.add('hidden'); }
 
         if (isValid) {
           fetch('/api/auth/student/signup', {
@@ -159,7 +164,8 @@
           .then(({ status, body }) => {
             if (status === 201) {
               showMessage('Signup Successful!', 'Redirecting to dashboard...');
-              setTimeout(() => { window.location.href = 'Student_portal.html'; }, 1200);
+              // This is the corrected line
+            setTimeout(() => { window.location.href = 'student_portal.html'; }, 1200);
             } else {
               showMessage('Signup Failed', body.message || 'Please check your details.');
             }
@@ -173,5 +179,3 @@
   </script>
 </body>
 </html>
-
-

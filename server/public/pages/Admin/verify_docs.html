@@ -1,0 +1,533 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Verify Documents</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+  <style>
+  :root {
+            --primary: #ea580c;
+            --primary-light: #f97316;
+            --primary-dark: #c2410c;
+            --secondary: #10b981;
+            --dark: #1f2937;
+            --light: #f9fafb;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        
+        body.dark-mode {
+            background-color: #111827;
+            color: #f3f4f6;
+        }
+        
+        body.dark-mode .bg-white {
+            background-color: #1f2937 !important;
+            color: #f3f4f6;
+        }
+        
+        body.dark-mode .text-gray-800 {
+            color: #f3f4f6;
+        }
+        
+        body.dark-mode .text-gray-600,
+        body.dark-mode .text-gray-500 {
+            color: #d1d5db;
+        }
+        
+        body.dark-mode .bg-slate-100 {
+            background-color: #1f2937;
+        }
+        
+        body.dark-mode .bg-slate-50 {
+            background-color: #374151 !important;
+        }
+        
+        body.dark-mode .border,
+        body.dark-mode .border-b {
+            border-color: #374151 !important;
+        }
+        
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        
+        body.dark-mode ::-webkit-scrollbar-track {
+            background: #374151;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary-light);
+            border-radius: 10px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--primary-dark);
+        }
+        
+        /* Hide content pages by default */
+        .content-page {
+            display: none;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* Show the active page */
+        .content-page.active {
+            display: block;
+        }
+        
+        /* Animation for the welcome box */
+        .animated-box {
+            animation: fadeInSlideDown 0.8s ease-out 0.2s forwards;
+            opacity: 0;
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+        }
+        
+        .animated-box:hover {
+            transform: translateY(-5px) scale(1.01);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        
+        @keyframes fadeInSlideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        /* Stats card hover effect */
+        .stats-card {
+            transition: all 0.3s ease;
+        }
+        
+        .stats-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Notification badge */
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            width: 18px;
+            height: 18px;
+            background-color: #ef4444;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            font-weight: bold;
+        }
+        
+        /* Custom checkbox */
+        .custom-checkbox {
+            -webkit-appearance: none;
+          -moz-appearance: none;
+          appearance: none;
+          width: 24px;
+          height: 24px;
+          border: 2px solid #d1d5db;
+          border-radius: 4px;
+          outline: none;
+          cursor: pointer;
+          position: relative;
+          transition: all 0.2s;
+        }
+        
+        .custom-checkbox:checked {
+            background-color: var(--primary);
+            border-color: var(--primary);
+        }
+        
+        .custom-checkbox:checked::after {
+            content: "✓";
+            position: absolute;
+            color: white;
+            font-size: 14px;
+            font-weight: bold;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        
+        /* Profile progress bar */
+        .progress-bar {
+            height: 8px;
+            border-radius: 4px;
+            background-color: #e5e7eb;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background-color: var(--primary);
+            border-radius: 4px;
+            transition: width 0.5s ease-in-out;
+        }
+        
+        /* Dark mode toggle */
+        .dark-mode-toggle {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 30px;
+        }
+        
+        .dark-mode-toggle input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 34px;
+        }
+        
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 22px;
+            width: 22px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        
+        input:checked + .toggle-slider {
+            background-color: var(--primary);
+        }
+        
+        input:checked + .toggle-slider:before {
+            transform: translateX(30px);
+        }
+        
+        /* Loading spinner */
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid var(--primary);
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            animation: spin 1s linear infinite;
+            display: inline-block;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* Floating action button */
+        .fab {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background-color: var(--primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            z-index: 100;
+            transition: all 0.3s ease;
+        }
+        
+        .fab:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+        }
+        
+        /* Custom file upload */
+        .file-upload {
+            position: relative;
+            overflow: hidden;
+            display: inline-block;
+            width: 100%;
+        }
+        
+        .file-upload-input {
+            position: absolute;
+            left: 0;
+            top: 0;
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
+        
+        /* Badge animations */
+        @keyframes bounce {
+            0%, 20%, 53%, 80%, 100% {
+                transform: translate3d(0,0,0);
+            }
+            40%, 43% {
+                transform: translate3d(0, -8px, 0);
+            }
+            70% {
+                transform: translate3d(0, -4px, 0);
+            }
+            90% {
+                transform: translate3d(0, -2px, 0);
+            }
+        }
+        
+        .badge-bounce {
+            animation: bounce 1s ease infinite;
+        }
+        
+        /* Dropdown styling */
+        .dropdown {
+            position: absolute;
+            right: 0;
+            margin-top: 0.5rem;
+            width: 20rem;
+            background-color: white;
+            border-radius: 0.5rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            z-index: 50;
+            display: none;
+        }
+        
+        body.dark-mode .dropdown {
+            background-color: #1f2937;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.2);
+        }
+        
+        .dropdown-header {
+            padding: 1rem;
+            border-bottom: 1px solid #e5e7eb;
+            font-weight: 600;
+            color: #1f2937;
+        }
+        
+        body.dark-mode .dropdown-header {
+            color: #f3f4f6;
+            border-bottom-color: #374151;
+        }
+        
+        .dropdown-item {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid #f3f4f6;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        
+        body.dark-mode .dropdown-item {
+            border-bottom-color: #374151;
+        }
+        
+        .dropdown-item:hover {
+            background-color: #f9fafb;
+        }
+        
+        body.dark-mode .dropdown-item:hover {
+            background-color: #374151;
+        }
+        
+        .dropdown-footer {
+            padding: 0.75rem 1rem;
+            border-top: 1px solid #e5e7eb;
+            text-align: center;
+        }
+        
+        body.dark-mode .dropdown-footer {
+            border-top-color: #374151;
+        }
+  </style>
+</head>
+<body class="bg-slate-100">
+  <!-- Floating Action Button -->
+  <div class="fab" id="help-fab">
+    <i class="fas fa-question text-xl"></i>
+  </div>
+  <div class="flex h-screen">
+    <!-- Sidebar -->
+    <aside class="w-64 bg-orange-800 text-white flex flex-col fixed h-full z-20 transition-all duration-300" id="sidebar">
+      <div class="h-16 flex items-center justify-center border-b border-orange-700">
+        <i class="fas fa-university text-2xl mr-3"></i>
+        <h1 class="text-xl font-bold">Admin Portal</h1>
+      </div>
+      <nav class="flex-1 px-4 py-6 space-y-2">
+        <h2 class="px-4 text-sm font-semibold text-orange-300 uppercase tracking-wider">Main Menu</h2>
+        <a href="Admin_Panel.html" class="nav-link flex items-center px-4 py-2.5 rounded-lg hover:bg-orange-700 transition-colors"><i class="fas fa-tachometer-alt w-6 text-center mr-3"></i> Dashboard</a>
+        <a href="manage_users.html" class="nav-link flex items-center px-4 py-2.5 rounded-lg hover:bg-orange-700 transition-colors"><i class="fas fa-users w-6 text-center mr-3"></i> Manage Users</a>
+        <a href="verify_docs.html" class="nav-link flex items-center px-4 py-2.5 rounded-lg bg-orange-900"><i class="fas fa-file-check w-6 text-center mr-3"></i> Verify Docs</a>
+        <a href="salary_tracker.html" class="nav-link flex items-center px-4 py-2.5 rounded-lg hover:bg-orange-700 transition-colors"><i class="fas fa-money-check w-6 text-center mr-3"></i> Track Salaries</a>
+        <a href="fee_tracker.html" class="nav-link flex items-center px-4 py-2.5 rounded-lg hover:bg-orange-700 transition-colors"><i class="fas fa-credit-card w-6 text-center mr-3"></i> Fee Status</a>
+        <h2 class="px-4 pt-4 text-sm font-semibold text-orange-300 uppercase tracking-wider">Common</h2>
+        <a href="#profile" class="nav-link flex items-center px-4 py-2.5 rounded-lg hover:bg-orange-700 transition-colors"><i class="fas fa-user-circle w-6 text-center mr-3"></i> Profile</a>
+        <a href="#inbox" class="nav-link flex items-center px-4 py-2.5 rounded-lg hover:bg-orange-700 transition-colors"><i class="fas fa-inbox w-6 text-center mr-3"></i> Inbox</a>
+        <a href="#settings" class="nav-link flex items-center px-4 py-2.5 rounded-lg hover:bg-orange-700 transition-colors"><i class="fas fa-cog w-6 text-center mr-3"></i> Settings</a>
+        <div class="px-4 pt-6">
+          <label class="flex items-center justify-between cursor-pointer">
+            <span class="text-sm text-orange-300">Dark Mode</span>
+            <div class="dark-mode-toggle">
+              <input type="checkbox" id="dark-mode-switch">
+              <span class="toggle-slider"></span>
+            </div>
+          </label>
+        </div>
+        <a href="admin_login.html" class="flex items-center px-4 py-2.5 rounded-lg text-red-300 hover:bg-red-700 hover:text-white transition-colors mt-8"><i class="fas fa-sign-out-alt w-6 text-center mr-3"></i> Logout</a>
+      </nav>
+    </aside>
+    <!-- Main Content -->
+    <main class="flex-1 ml-64 p-6 md:p-8 overflow-y-auto transition-all duration-300" id="main-content">
+      <!-- Header -->
+      <header class="flex justify-between items-center mb-6">
+        <div class="flex items-center">
+          <button id="menu-toggle" class="md:hidden mr-4 text-2xl text-gray-600">
+            <i class="fas fa-bars"></i>
+          </button>
+          <h1 class="text-3xl font-bold text-gray-800" id="page-title">Pending Documents to Verify</h1>
+        </div>
+        <div class="flex items-center space-x-6">
+          <div class="relative">
+            <button class="text-gray-500 hover:text-gray-800 text-2xl relative" id="notification-btn">
+              <i class="fas fa-bell"></i>
+              <span class="notification-badge">5</span>
+            </button>
+            <!-- Notification dropdown -->
+            <div class="dropdown" id="notification-dropdown">
+              <div class="dropdown-header">
+                <h3>Notifications</h3>
+              </div>
+              <div class="max-h-60 overflow-y-auto">
+                <a href="#" class="dropdown-item">
+                  <div class="flex-shrink-0 bg-orange-100 p-2 rounded-full mr-3">
+                    <i class="fas fa-users text-orange-600"></i>
+                  </div>
+                  <div>
+                    <p class="text-sm font-medium">3 new user registrations</p>
+                    <p class="text-xs text-gray-500">10 minutes ago</p>
+                  </div>
+                </a>
+                <a href="#" class="dropdown-item">
+                  <div class="flex-shrink-0 bg-green-100 p-2 rounded-full mr-3">
+                    <i class="fas fa-check-circle text-green-600"></i>
+                  </div>
+                  <div>
+                    <p class="text-sm font-medium">Salary processed successfully</p>
+                    <p class="text-xs text-gray-500">2 hours ago</p>
+                  </div>
+                </a>
+                <a href="#" class="dropdown-item">
+                  <div class="flex-shrink-0 bg-blue-100 p-2 rounded-full mr-3">
+                    <i class="fas fa-file-alt text-blue-600"></i>
+                  </div>
+                  <div>
+                    <p class="text-sm font-medium">5 documents need verification</p>
+                    <p class="text-xs text-gray-500">Yesterday</p>
+                  </div>
+                </a>
+              </div>
+              <div class="dropdown-footer">
+                <a href="#" class="text-sm text-orange-600 font-medium">View all notifications</a>
+              </div>
+            </div>
+          </div>
+          <div class="relative">
+            <button class="flex items-center space-x-2" id="profile-btn">
+              <div class="h-10 w-10 rounded-full bg-orange-600 flex items-center justify-center text-white font-semibold">A</div>
+              <span class="text-gray-700 font-medium hidden md:inline-block">Admin User</span>
+              <i class="fas fa-chevron-down text-gray-500 text-xs"></i>
+            </button>
+            <!-- Profile dropdown -->
+            <div class="dropdown" id="profile-dropdown">
+              <div class="p-4 border-b">
+                <div class="flex items-center space-x-3">
+                  <div class="h-12 w-12 rounded-full bg-orange-600 flex items-center justify-center text-white font-semibold text-lg">A</div>
+                  <div>
+                    <p class="font-semibold">Admin User</p>
+                    <p class="text-sm text-gray-500">admin@example.com</p>
+                  </div>
+                </div>
+              </div>
+              <div>
+                <a href="#profile" class="dropdown-item">
+                  <i class="fas fa-user-circle w-5 mr-3 text-gray-500"></i>
+                  <span>Profile</span>
+                </a>
+                <a href="#settings" class="dropdown-item">
+                  <i class="fas fa-cog w-5 mr-3 text-gray-500"></i>
+                  <span>Settings</span>
+                </a>
+                <a href="#" class="dropdown-item">
+                  <i class="fas fa-question-circle w-5 mr-3 text-gray-500"></i>
+                  <span>Help & Support</span>
+                </a>
+              </div>
+              <div class="dropdown-footer">
+                <a href="admin_login.html" class="text-sm text-orange-600 font-medium">Sign out</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </header>
+      <!-- Verify Docs Content -->
+      <div class="max-w-3xl mx-auto p-8 bg-white rounded-xl shadow-lg">
+        <h1 class="text-3xl font-bold mb-6 text-center">Pending Documents to Verify</h1>
+        <table class="w-full table-auto border">
+          <thead>
+          <tr class="bg-gray-200">
+            <th class="px-4 py-2">User Type</th>
+            <th class="px-4 py-2">Name</th>
+            <th class="px-4 py-2">Document Name</th>
+            <th class="px-4 py-2">Action</th>
+          </tr>
+          </thead>
+          <tbody>
+          <!-- Example row -->
+          <tr>
+            <td class="border px-4 py-2">Student</td>
+            <td class="border px-4 py-2">John Doe</td>
+            <td class="border px-4 py-2">ID Card</td>
+            <td class="border px-4 py-2"><button class="bg-blue-600 text-white px-4 py-1 rounded">Verify</button></td>
+          </tr>
+          <!-- Add more rows dynamically -->
+          </tbody>
+        </table>
+      </div>
+    </main>
+  </div>
+</body>
+</html>

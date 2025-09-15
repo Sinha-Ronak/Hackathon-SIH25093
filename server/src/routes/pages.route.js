@@ -1,6 +1,8 @@
 import express from 'express'
 import path from 'path'
 import { fileURLToPath } from 'url';
+import { authenticateAdmin } from '../middlewares/auth.middleware.js';
+import { adminPanelController } from '../controllers/pages.controller.js';
 
 const router = express.Router();
 const __filename = fileURLToPath(import.meta.url);
@@ -29,5 +31,9 @@ router.get('/student/signup', (req, res) => {
 router.get('/student/login', (req, res) => {
   res.sendFile(path.join(__dirname, "../public/pages/Student/student_login.html"));
 });
+
+
+// API endpoint for admin dashboard
+router.get('/admin/dashboard', adminPanelController);
 
 export default router;
