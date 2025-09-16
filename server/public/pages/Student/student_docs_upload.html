@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Student Portal Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+    />
+    <style>
+      /* Only keep styles for sidebar, header, navigation, dark mode, upload area, and file list */
+      :root {
+        --primary: #10b981;
+        --primary-light: #34d399;
+        --primary-dark: #059669;
+        --dark: #1f2937;
+        --light: #f9fafb;
+      }
+      body {
+        font-family: "Inter", sans-serif;
+        transition: background-color 0.3s, color 0.3s;
+      }
+      body.dark-mode {
+        background-color: #111827;
+        color: #f3f4f6;
+      }
+      body.dark-mode .bg-white {
+        background-color: #1f2937 !important;
+        color: #f3f4f6;
+      }
+      .sidebar-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 30;
+      }
+      .sidebar-overlay.active {
+        display: block;
+      }
+      .nav-link {
+        padding: 1rem 1.5rem;
+        font-size: 1.1rem;
+      }
+      .nav-link i {
+        width: 2rem;
+        font-size: 1.2rem;
+      }
+      .dropdown {
+        position: absolute;
+        right: 0;
+        margin-top: 0.5rem;
+        width: 20rem;
+        background-color: white;
+        border-radius: 0.5rem;
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+          0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        z-index: 50;
+        display: none;
+      }
+      body.dark-mode .dropdown {
+        background-color: #1f2937;
+      }
+      .dropdown-header {
+        padding: 1rem;
+        border-bottom: 1px solid #e5e7eb;
+        font-weight: 600;
+      }
+      .dropdown-item {
+        display: flex;
+        align-items: center;
+        padding: 0.75rem 1rem;
+        cursor: pointer;
+      }
+      .dropdown-footer {
+        padding: 0.75rem 1rem;
+        border-top: 1px solid #e5e7eb;
+        text-align: center;
+      }
+      .dark-mode-toggle {
+        position: relative;
+        display: inline-block;
+        width: 60px;
+        height: 30px;
+      }
+      .dark-mode-toggle input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+      }
+      .toggle-slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #ccc;
+        transition: 0.4s;
+        border-radius: 34px;
+      }
+      .toggle-slider:before {
+        position: absolute;
+        content: "";
+        height: 22px;
+        width: 22px;
+        left: 4px;
+        bottom: 4px;
+        background-color: white;
+        transition: 0.4s;
+        border-radius: 50%;
+      }
+      input:checked + .toggle-slider {
+        background-color: var(--primary);
+      }
+      input:checked + .toggle-slider:before {
+        transform: translateX(30px);
+      }
+      .notification-badge {
+        position: absolute;
+        top: -5px;
+        right: -5px;
+        width: 18px;
+        height: 18px;
+        background-color: #ef4444;
+        color: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 10px;
+        font-weight: bold;
+      }
+      .animated-box {
+        animation: fadeInSlideDown 0.8s ease-out 0.2s forwards;
+        opacity: 0;
+        transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+      }
+      .animated-box:hover {
+        transform: translateY(-5px) scale(1.01);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+      }
+      @keyframes fadeInSlideDown {
+        from {
+          opacity: 0;
+          transform: translateY(-20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      .upload-area {
+        border: 2px dashed #ccc;
+        border-radius: 12px;
+        padding: 40px 20px;
+        text-align: center;
+        margin-bottom: 25px;
+        background-color: #f8f9fa;
+        cursor: pointer;
+        position: relative;
+      }
+      .upload-area.highlight {
+        border-color: var(--primary);
+        background-color: #e6fff5;
+      }
+      .upload-area i {
+        font-size: 3.5rem;
+        color: var(--primary);
+        margin-bottom: 15px;
+        display: block;
+      }
+      .upload-area h3 {
+        font-size: 1.5rem;
+        margin-bottom: 10px;
+        color: #222;
+      }
+      .upload-area p {
+        color: #7f8c8d;
+        margin-bottom: 20px;
+      }
+      .browse-btn {
+        background: linear-gradient(
+          to right,
+          var(--primary),
+          var(--primary-dark)
+        );
+        color: white;
+        border: none;
+        padding: 12px 30px;
+        border-radius: 50px;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+      }
+      #file-input {
+        display: none;
+      }
+      .file-list {
+        margin-top: 30px;
+      }
+      .file-list h3 {
+        font-size: 1.3rem;
+        margin-bottom: 15px;
+        color: #222;
+      }
+      .file-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 15px;
+        background-color: #f8f9fa;
+        border-radius: 8px;
+        margin-bottom: 10px;
+      }
+      .file-info {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+      .file-icon {
+        width: 40px;
+        height: 40px;
+        background: linear-gradient(
+          135deg,
+          var(--primary),
+          var(--primary-dark)
+        );
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+      }
+      .file-details h4 {
+        font-size: 1rem;
+        margin-bottom: 4px;
+      }
+      .file-details span {
+        font-size: 0.8rem;
+        color: #7f8c8d;
+      }
+      .file-actions button {
+        background: none;
+        border: none;
+        color: #e74c3c;
+        cursor: pointer;
+        font-size: 1.1rem;
+      }
+      .progress-bar {
+        height: 6px;
+        background-color: #ecf0f1;
+        border-radius: 3px;
+        margin-top: 10px;
+        overflow: hidden;
+      }
+      .progress {
+        height: 100%;
+        background: linear-gradient(
+          to right,
+          var(--primary),
+          var(--primary-dark)
+        );
+        width: 0%;
+        border-radius: 3px;
+      }
+      .upload-btn {
+        width: 100%;
+        background: linear-gradient(
+          to right,
+          var(--primary),
+          var(--primary-dark)
+        );
+        color: white;
+        border: none;
+        padding: 16px;
+        border-radius: 8px;
+        font-size: 1.1rem;
+        font-weight: 600;
+        cursor: pointer;
+        margin-top: 20px;
+      }
+      .upload-btn:disabled {
+        background: #ccc;
+        cursor: not-allowed;
+      }
+      .success-message {
+        text-align: center;
+        padding: 20px;
+        background-color: #e6fff5;
+        border-radius: 8px;
+        margin-top: 20px;
+        color: var(--primary-dark);
+        display: none;
+      }
+      .success-message i {
+        font-size: 2.5rem;
+        margin-bottom: 10px;
+        display: block;
+      }
+    </style>
+  </head>
+
+  <body class="bg-slate-100">
+    <!-- Mobile overlay for sidebar -->
+    <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+    <div class="flex h-screen">
+      <!-- Sidebar -->
+      <aside
+        class="w-64 bg-emerald-800 text-white flex flex-col fixed h-full z-40 transition-transform duration-300 md:translate-x-0 -translate-x-full"
+        id="sidebar"
+      >
+        <div
+          class="h-16 flex items-center justify-center border-b border-emerald-700"
+        >
+          <i class="fas fa-user-graduate text-2xl mr-3"></i>
+          <h1 class="text-xl font-bold">Student Portal</h1>
+          <button id="close-sidebar" class="ml-auto mr-4 text-xl md:hidden">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+        <nav class="flex-1 px-4 py-6 space-y-2 overflow-y-auto">
+          <h2
+            class="px-4 text-sm font-semibold text-emerald-300 uppercase tracking-wider"
+          >
+            Main Menu
+          </h2>
+          <a
+            href="Student_portal.html"
+            class="nav-link flex items-center px-4 py-3 rounded-lg bg-emerald-900"
+            ><i class="fas fa-user-circle w-6 text-center mr-3"></i> Profile</a
+          >
+          <a
+            href="#attendance"
+            class="nav-link flex items-center px-4 py-3 rounded-lg hover:bg-emerald-700 transition-colors"
+            ><i class="fas fa-calendar-check w-6 text-center mr-3"></i>
+            Attendance</a
+          >
+          <a
+            href="#download"
+            class="nav-link flex items-center px-4 py-3 rounded-lg hover:bg-emerald-700 transition-colors"
+            ><i class="fas fa-download w-6 text-center mr-3"></i> Download
+            Assets</a
+          >
+          <a
+            href="#result"
+            class="nav-link flex items-center px-4 py-3 rounded-lg hover:bg-emerald-700 transition-colors"
+            ><i class="fas fa-poll w-6 text-center mr-3"></i> Result</a
+          >
+
+          <h2
+            class="px-4 pt-4 text-sm font-semibold text-emerald-300 uppercase tracking-wider"
+          >
+            Documents
+          </h2>
+          <a
+            href="student_docs_upload.html"
+            class="nav-link flex items-center px-4 py-3 rounded-lg hover:bg-emerald-700 transition-colors"
+            ><i class="fas fa-file-upload w-6 text-center mr-3"></i> Docs
+            Upload</a
+          >
+          <a
+            href="#view-class"
+            class="nav-link flex items-center px-4 py-3 rounded-lg hover:bg-emerald-700 transition-colors"
+            ><i class="fas fa-chalkboard-teacher w-6 text-center mr-3"></i>
+            Faculty Details</a
+          >
+
+          <h2
+            class="px-4 pt-4 text-sm font-semibold text-emerald-300 uppercase tracking-wider"
+          >
+            Assignments
+          </h2>
+          <a
+            href="#view-assignments"
+            class="nav-link flex items-center px-4 py-3 rounded-lg hover:bg-emerald-700 transition-colors"
+            ><i class="fas fa-tasks w-6 text-center mr-3"></i> View
+            Assignments</a
+          >
+          <a
+            href="#assignment-upload"
+            class="nav-link flex items-center px-4 py-3 rounded-lg hover:bg-emerald-700 transition-colors"
+            ><i class="fas fa-upload w-6 text-center mr-3"></i> Assignment
+            Upload</a
+          >
+
+          <h2
+            class="px-4 pt-4 text-sm font-semibold text-emerald-300 uppercase tracking-wider"
+          >
+            Common
+          </h2>
+          <a
+            href="#leaderboard"
+            class="nav-link flex items-center px-4 py-3 rounded-lg hover:bg-emerald-700 transition-colors"
+            ><i class="fas fa-trophy w-6 text-center mr-3"></i> Leaderboard</a
+          >
+          <a
+            href="#inbox"
+            class="nav-link flex items-center px-4 py-3 rounded-lg hover:bg-emerald-700 transition-colors"
+            ><i class="fas fa-inbox w-6 text-center mr-3"></i> Inbox</a
+          >
+
+          <div class="px-4 pt-6">
+            <label class="flex items-center justify-between cursor-pointer">
+              <span class="text-sm text-emerald-300">Dark Mode</span>
+              <div class="dark-mode-toggle">
+                <input type="checkbox" id="dark-mode-switch" />
+                <span class="toggle-slider"></span>
+              </div>
+            </label>
+          </div>
+
+          <a
+            href="#"
+            class="flex items-center px-4 py-3 rounded-lg text-red-300 hover:bg-red-700 hover:text-white transition-colors mt-8"
+            ><i class="fas fa-sign-out-alt w-6 text-center mr-3"></i> Logout</a
+          >
+        </nav>
+      </aside>
+
+      <!-- Main Content -->
+      <main
+        class="flex-1 md:ml-64 p-6 md:p-8 overflow-y-auto transition-all duration-300"
+        id="main-content"
+      >
+        <!-- Header -->
+        <header class="flex justify-between items-center mb-6">
+          <div class="flex items-center">
+            <button
+              id="menu-toggle"
+              class="md:hidden mr-4 text-2xl text-gray-600"
+            >
+              <i class="fas fa-bars"></i>
+            </button>
+            <h1 class="text-3xl font-bold text-gray-800" id="page-title">
+              Docs Upload
+            </h1>
+          </div>
+          <div class="flex items-center space-x-6">
+            <div class="relative">
+              <button class="flex items-center" id="user-menu-button">
+                <div
+                  class="w-10 h-10 rounded-full bg-emerald-500 flex items-center justify-center text-white font-bold text-lg"
+                >
+                  JS
+                </div>
+                <span class="ml-2 text-gray-700 font-medium">John Smith</span>
+                <i class="fas fa-chevron-down ml-2 text-gray-500 text-sm"></i>
+              </button>
+            </div>
+          </div>
+        </header>
+        <h2>Upload Document</h2>
+        <div class="max-w-2xl mx-auto">
+          <div class="bg-white rounded-2xl shadow-xl p-8 animated-box">
+            <h2
+              class="text-2xl font-bold mb-4 text-emerald-700 flex items-center"
+            >
+              <i class="fas fa-file-upload mr-3 text-emerald-500"></i> Upload
+              Document
+            </h2>
+            <form
+              id="uploadForm"
+              enctype="multipart/form-data"
+              class="space-y-6"
+            >
+              <div>
+                <label class="block text-gray-700 font-semibold mb-2"
+                  >Document Type</label
+                >
+                <input
+                  type="text"
+                  name="docType"
+                  required
+                  class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                />
+              </div>
+              <div>
+                <label class="block text-gray-700 font-semibold mb-2"
+                  >Activity Type</label
+                >
+                <select
+                  name="activityType"
+                  required
+                  class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                >
+                  <option value="Seminar">Seminar</option>
+                  <option value="Conference">Conference</option>
+                  <option value="MOOC">MOOC</option>
+                  <option value="Internship">Internship</option>
+                  <option value="Extra-Curricular">Extra-Curricular</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-gray-700 font-semibold mb-2"
+                  >Upload File (PDF)</label
+                >
+                <input
+                  type="file"
+                  name="file"
+                  accept="application/pdf"
+                  required
+                  class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                />
+              </div>
+              <button
+                type="submit"
+                class="w-full bg-gradient-to-r from-emerald-500 to-emerald-700 text-white py-3 rounded-lg font-bold text-lg shadow hover:from-emerald-600 hover:to-emerald-800 transition"
+              >
+                Upload
+              </button>
+            </form>
+            <div id="success-message" class="success-message mt-6">
+              <i class="fas fa-check-circle text-emerald-500"></i>
+              <span>Document uploaded successfully!</span>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        // Sidebar, header, navigation, dark mode, and document upload logic only
+        const menuToggle = document.getElementById("menu-toggle");
+        const sidebar = document.getElementById("sidebar");
+        const sidebarOverlay = document.getElementById("sidebar-overlay");
+        const closeSidebar = document.getElementById("close-sidebar");
+        if (menuToggle && sidebar && sidebarOverlay && closeSidebar) {
+          menuToggle.addEventListener("click", function () {
+            sidebar.classList.remove("-translate-x-full");
+            sidebarOverlay.classList.add("active");
+          });
+          closeSidebar.addEventListener("click", function () {
+            sidebar.classList.add("-translate-x-full");
+            sidebarOverlay.classList.remove("active");
+          });
+          sidebarOverlay.addEventListener("click", function () {
+            sidebar.classList.add("-translate-x-full");
+            sidebarOverlay.classList.remove("active");
+          });
+        }
+        const darkModeSwitch = document.getElementById("dark-mode-switch");
+        if (darkModeSwitch) {
+          darkModeSwitch.addEventListener("change", function () {
+            document.body.classList.toggle("dark-mode");
+            localStorage.setItem(
+              "darkMode",
+              document.body.classList.contains("dark-mode")
+            );
+          });
+          if (localStorage.getItem("darkMode") === "true") {
+            document.body.classList.add("dark-mode");
+            darkModeSwitch.checked = true;
+          }
+        }
+        // Navigation functionality
+        const navLinks = document.querySelectorAll(".nav-link");
+        const contentPages = document.querySelectorAll(".content-page");
+        const pageTitle = document.getElementById("page-title");
+        navLinks.forEach((link) => {
+          link.addEventListener("click", function (e) {
+            const href = this.getAttribute("href");
+
+            // If it is an HTML file, allow normal redirect
+            if (href.endsWith(".html")) return;
+
+            // Otherwise handle internal content switching
+            e.preventDefault();
+            const targetId = href.substring(1);
+            const targetPage = document.getElementById(targetId);
+            if (targetPage) {
+              contentPages.forEach((page) => page.classList.remove("active"));
+              targetPage.classList.add("active");
+              if (pageTitle) pageTitle.textContent = this.textContent.trim();
+            }
+          });
+        });
+
+        // Document upload logic
+        const dropArea = document.getElementById("drop-area");
+        const fileInput = document.getElementById("file-input");
+        const browseBtn = document.querySelector(".browse-btn");
+        const filesContainer = document.getElementById("files-container");
+        const uploadButton = document.getElementById("upload-button");
+        const successMessage = document.getElementById("success-message");
+        let files = [];
+        if (
+          dropArea &&
+          fileInput &&
+          browseBtn &&
+          filesContainer &&
+          uploadButton &&
+          successMessage
+        ) {
+          ["dragenter", "dragover", "dragleave", "drop"].forEach(
+            (eventName) => {
+              dropArea.addEventListener(eventName, preventDefaults, false);
+              document.body.addEventListener(eventName, preventDefaults, false);
+            }
+          );
+          ["dragenter", "dragover"].forEach((eventName) => {
+            dropArea.addEventListener(eventName, highlight, false);
+          });
+          ["dragleave", "drop"].forEach((eventName) => {
+            dropArea.addEventListener(eventName, unhighlight, false);
+          });
+          dropArea.addEventListener("drop", handleDrop, false);
+          browseBtn.addEventListener("click", () => {
+            fileInput.click();
+          });
+          fileInput.addEventListener("change", handleFileSelect, false);
+          uploadButton.addEventListener("click", handleUpload, false);
+        }
+        function preventDefaults(e) {
+          e.preventDefault();
+          e.stopPropagation();
+        }
+        function highlight() {
+          dropArea.classList.add("highlight");
+        }
+        function unhighlight() {
+          dropArea.classList.remove("highlight");
+        }
+        function handleDrop(e) {
+          const dt = e.dataTransfer;
+          const newFiles = dt.files;
+          processFiles(newFiles);
+        }
+        function handleFileSelect(e) {
+          const newFiles = e.target.files;
+          processFiles(newFiles);
+        }
+        function processFiles(newFiles) {
+          for (let i = 0; i < newFiles.length; i++) {
+            const file = newFiles[i];
+            if (files.some((f) => f.name === file.name && f.size === file.size))
+              continue;
+            if (file.size > 10 * 1024 * 1024) {
+              alert(`File ${file.name} is too large. Maximum size is 10MB.`);
+              continue;
+            }
+            const validExtensions = [".pdf", ".doc", ".docx", ".txt"];
+            const fileExtension =
+              "." + file.name.split(".").pop().toLowerCase();
+            if (!validExtensions.includes(fileExtension)) {
+              alert(
+                `File ${file.name} has an unsupported format. Supported formats: PDF, DOC, DOCX, TXT.`
+              );
+              continue;
+            }
+            files.push(file);
+            addFileToUI(file);
+          }
+          uploadButton.disabled = files.length === 0;
+        }
+        function addFileToUI(file) {
+          const fileItem = document.createElement("div");
+          fileItem.className = "file-item";
+          const fileSize = formatFileSize(file.size);
+          fileItem.innerHTML = `
+          <div class="file-info">
+            <div class="file-icon">
+              <i class="fas fa-file"></i>
+            </div>
+            <div class="file-details">
+              <h4>${file.name}</h4>
+              <span>${fileSize}</span>
+              <div class="progress-bar">
+                <div class="progress" id="progress-${file.name}"></div>
+              </div>
+            </div>
+          </div>
+          <div class="file-actions">
+            <button class="remove-btn" data-filename="${file.name}">
+              <i class="fas fa-trash"></i>
+            </button>
+          </div>
+        `;
+          filesContainer.appendChild(fileItem);
+          const removeBtn = fileItem.querySelector(".remove-btn");
+          removeBtn.addEventListener("click", () => removeFile(file.name));
+        }
+        function removeFile(fileName) {
+          files = files.filter((f) => f.name !== fileName);
+          const fileItems = document.querySelectorAll(".file-item");
+          fileItems.forEach((item) => {
+            const name = item.querySelector(".file-details h4").textContent;
+            if (name === fileName) {
+              item.style.opacity = "0";
+              item.style.transform = "translateX(-20px)";
+              setTimeout(() => {
+                item.remove();
+              }, 300);
+            }
+          });
+          uploadButton.disabled = files.length === 0;
+        }
+        function handleUpload() {
+          if (files.length === 0) return;
+          uploadButton.disabled = true;
+          uploadButton.textContent = "Uploading...";
+          let uploadedCount = 0;
+          files.forEach((file, index) => {
+            const progressBar = document.getElementById(
+              `progress-${file.name}`
+            );
+            let progress = 0;
+            const interval = setInterval(() => {
+              progress += Math.random() * 10;
+              if (progress >= 100) {
+                progress = 100;
+                clearInterval(interval);
+                uploadedCount++;
+                if (uploadedCount === files.length) {
+                  setTimeout(() => {
+                    showSuccessMessage();
+                  }, 500);
+                }
+              }
+              progressBar.style.width = `${progress}%`;
+            }, 300);
+          });
+        }
+        function showSuccessMessage() {
+          successMessage.style.display = "block";
+          uploadButton.textContent = "Upload Files";
+          setTimeout(() => {
+            files = [];
+            filesContainer.innerHTML = "";
+            uploadButton.disabled = true;
+            successMessage.style.display = "none";
+          }, 3000);
+        }
+        function formatFileSize(bytes) {
+          if (bytes < 1024) return bytes + " bytes";
+          else if (bytes < 1048576) return (bytes / 1024).toFixed(1) + " KB";
+          else return (bytes / 1048576).toFixed(1) + " MB";
+        }
+      });
+      document
+        .getElementById("uploadForm")
+        .addEventListener("submit", async (e) => {
+          e.preventDefault();
+
+          const formData = new FormData(e.target);
+
+          const res = await fetch("/api/docs/upload", {
+            method: "POST",
+            body: formData,
+            credentials: "include", // so cookies are sent
+          });
+
+          const data = await res.json();
+          if (data.success) {
+            document.getElementById("success-message").style.display = "block";
+          } else {
+            alert(data.message || "Upload failed.");
+          }
+        });
+    </script>
+  </body>
+</html>
