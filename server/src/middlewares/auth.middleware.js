@@ -4,7 +4,10 @@ import Faculty from "../models/faculty.model.js"
 import Student from "../models/student.model.js"
 
 export const authenticateStudent = async (req , res , next) => {
-    const token = req.cookies.token;
+    let token = req.cookies.token;
+    if (!token && req.headers.authorization && req.headers.authorization.startsWith('Bearer ')) {
+        token = req.headers.authorization.split(' ')[1];
+    }
     try {
         if(!token) {
             return res.status(401).json({message: "Unauthorized User" });
@@ -28,7 +31,10 @@ export const authenticateStudent = async (req , res , next) => {
 }
 
 export const authenticateFaculty = async (req , res , next) => {
-    const token = req.cookies.token;
+    let token = req.cookies.token;
+    if (!token && req.headers.authorization && req.headers.authorization.startsWith('Bearer ')) {
+        token = req.headers.authorization.split(' ')[1];
+    }
     try {
         if(!token) {
             return res.status(401).json({message: "Unauthorized User" });
@@ -52,7 +58,10 @@ export const authenticateFaculty = async (req , res , next) => {
 }
 
 export const authenticateAdmin = async (req , res , next) => {
-    const token = req.cookies.token;
+    let token = req.cookies.token;
+    if (!token && req.headers.authorization && req.headers.authorization.startsWith('Bearer ')) {
+        token = req.headers.authorization.split(' ')[1];
+    }
     try {
         if(!token) {
             return res.status(401).json({message: "Unauthorized User" });
